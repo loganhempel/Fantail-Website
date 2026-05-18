@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wellington HVAC, Heat Pumps, Solar &amp; EV Chargers | Fantail Services</title>
+  <meta name="description" content="Wellington's leading HVAC, electrical, solar & EV charger installer. Heat pumps, ventilation, refrigeration. Commercial, industrial & residential. 42 staff, 24/7 service since 2010.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Playfair+Display:ital,wght@1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{archivo:['Poppins','sans-serif'],playfair:['Playfair Display','serif'],jakarta:['Plus Jakarta Sans','sans-serif']}}}}</script>
+  <style>
+    :root{
+      --red:#EC263C; --red-d:#C41F31; --blue:#01B7F1;
+      --bg0:#0a0a0a; --bg1:#111111; --bg2:#171717; --bg3:#1f1f1f;
+      --border:#222222; --muted:#4a4a4a; --dim:#666;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg0);color:#fff;overflow-x:hidden;}
+    h1,h2,h3,h4{font-family:'Poppins',sans-serif;font-weight:700;}
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+
+    /* Grain overlay */
+    body::after{content:'';position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:.04;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size:200px 200px;}
+
+    /* Progress */
+    #progress{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--red),var(--blue));z-index:9999;transition:width .08s linear;}
+
+    /* Reveal */
+    .r{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease;}
+    .r.on{opacity:1;transform:none;}
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+    /* Clip reveal (for big headings) */
+    .rv{clip-path:inset(0 0 100% 0);transition:clip-path .9s cubic-bezier(.16,1,.3,1);}
+    .rv.on{clip-path:inset(0 0 0% 0);}
+
+    /* Mobile menu */
+    #mob{transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+    #mob.open{transform:none;}
+
+    /* Marquee */
+    @keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .mq{animation:mq 45s linear infinite;}
+
+    /* Float */
+    @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+    /* Section label */
+    .lbl{font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--red);}
+
+    /* Dividers */
+    .div-h{height:1px;background:var(--border);}
+    .div-g{height:1px;background:linear-gradient(90deg,transparent,var(--red) 35%,var(--blue) 65%,transparent);}
+
+    /* Accent line */
+    .al{width:36px;height:2px;background:linear-gradient(90deg,var(--red),var(--blue));}
+
+    /* Glow btn */
+    .gbtn{transition:transform .2s,box-shadow .2s;box-shadow:0 0 22px rgba(236,38,60,.25);}
+    .gbtn:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(236,38,60,.45);}
+
+    /* Counter */
+    .ctr{font-variant-numeric:tabular-nums;}
+
+    /* Live dot */
+    .live::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:8px;vertical-align:middle;animation:pdot 2s ease-in-out infinite;}
+    @keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{box-shadow:0 0 0 6px rgba(34,197,94,0)}}
+
+    /* Card */
+    .card{transition:transform .25s,border-color .25s,box-shadow .25s;}
+    .card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.5);}
+
+    /* Testimonial */
+    .tcard{transition:border-color .25s,transform .25s;}
+    .tcard:hover{border-color:var(--red);transform:translateY(-4px);}
+
+    /* Why card */
+    .why-card{transition:border-color .25s,background .25s;}
+    .why-card:hover{background:#141414;border-color:rgba(236,38,60,.28);}
+    .why-line{width:28px;height:2px;background:linear-gradient(90deg,var(--red),var(--blue));transition:width .5s ease;}
+    .why-card:hover .why-line{width:100%;}
+
+    /* Process line animation */
+    .proc-line{transform:scaleX(0);transform-origin:left center;transition:transform 1.6s cubic-bezier(.22,1,.36,1);}
+    .proc-line.on{transform:scaleX(1);}
+
+    /* FAQ */
+    .faqb{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+    .faqb.o{max-height:400px;}
+    .faqi{transition:transform .3s;}
+    .faqi.o{transform:rotate(45deg);}
+
+    /* Stat card */
+    @keyframes statfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  </style>
+  <link rel="canonical" href="https://fantailservices.co.nz/index3.html">
+  <meta property="og:title" content="Wellington HVAC, Heat Pumps, Solar & EV Chargers | Fantail Services">
+  <meta property="og:description" content="Wellington's leading HVAC, electrical, solar & EV charger installer. Heat pumps, ventilation, refrigeration. Commercial, industrial & residential. 42 staff, 24/7 service since 2010.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://imagedelivery.net/xaKlCos5cTg_1RWzIu_h-A/17ea4896-89bf-4efe-b603-f9c128bedc00/public">
+  <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HVACBusiness","name":"Fantail Services Ltd","image":"https://imagedelivery.net/xaKlCos5cTg_1RWzIu_h-A/17ea4896-89bf-4efe-b603-f9c128bedc00/public","@id":"https://fantailservices.co.nz","url":"https://fantailservices.co.nz","telephone":"+64-4-212-4763","email":"office@fantailservices.co.nz","address":{"@type":"PostalAddress","streetAddress":"5 Pretoria Street, Hutt Central","addressLocality":"Lower Hutt","postalCode":"5010","addressRegion":"Wellington","addressCountry":"NZ"},"geo":{"@type":"GeoCoordinates","latitude":-41.2073,"longitude":174.9075},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"07:30","closes":"17:00"}],"areaServed":[{"@type":"City","name":"Wellington"},{"@type":"City","name":"Lower Hutt"},{"@type":"City","name":"Upper Hutt"},{"@type":"City","name":"Porirua"},{"@type":"AdministrativeArea","name":"Kapiti Coast"}],"priceRange":"$","foundingDate":"2010","founder":{"@type":"Person","name":"Chris Spayes"},"numberOfEmployees":"42","sameAs":["https://www.facebook.com/fantailservices","https://www.linkedin.com/company/fantail-services-ltd"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much does heat pump installation cost in Wellington?","acceptedAnswer":{"@type":"Answer","text":"Single-room heat pump installation in Wellington starts from $1,299 fully installed, including a Certificate of Compliance. Mid-wall and ducted systems range $2,200–$4,000. Whole-home multi-zone systems are custom-quoted. Fantail beats any like-for-like Wellington quote by 5%."}},{"@type":"Question","name":"How quickly can Fantail respond to a Wellington heat pump or HVAC enquiry?","acceptedAnswer":{"@type":"Answer","text":"Every enquiry receives a response within 2 business hours. Site surveys are typically booked within the same week. Our 24/7 emergency line is always live for failed HVAC, refrigeration or server-cooling systems."}},{"@type":"Question","name":"Does Fantail install solar panels and EV chargers in Wellington?","acceptedAnswer":{"@type":"Answer","text":"Yes. Fantail installs residential 5–10 kW solar PV systems (Sungrow, Fronius) and 7 kW / 22 kW EV chargers (Tesla Wall Connector, EVNEX) across Greater Wellington. Both come with our 12-month workmanship warranty plus full manufacturer warranty."}},{"@type":"Question","name":"Are Fantail's commercial installs BWOF, PS1 and COC compliant?","acceptedAnswer":{"@type":"Answer","text":"Every commercial project ships with full PS1 design documentation, PS3 commissioning certificates and ongoing BWOF 12A support. Fantail is a licensed Certificate of Compliance issuer for electrical work — all handled in-house, no third parties."}},{"@type":"Question","name":"What Wellington regions does Fantail cover?","acceptedAnswer":{"@type":"Answer","text":"All of Greater Wellington — from Kāpiti Coast to Wairarapa. 22 vehicles deployed daily, with the fastest response in Lower Hutt (our HQ), Wellington CBD, Porirua, Upper Hutt and Johnsonville."}},{"@type":"Question","name":"Does Fantail offer 24/7 emergency HVAC and refrigeration callouts?","acceptedAnswer":{"@type":"Answer","text":"Yes — 24/7, every day of the year. Server-room cooling failures, refrigeration emergencies, post-quake building services, plant down — our on-call team is in a vehicle within minutes. Most CBD callouts have a tech on site inside the hour."}},{"@type":"Question","name":"What warranty does Fantail offer on installs?","acceptedAnswer":{"@type":"Answer","text":"Every install carries our 12-month workmanship warranty on top of full manufacturer warranties — typically 5–7 years on heat pumps, 10 years on solar inverters, 25 years on PV panels. Service-plan customers receive extended terms."}},{"@type":"Question","name":"Does Fantail price-match competitor heat pump quotes in Wellington?","acceptedAnswer":{"@type":"Answer","text":"Yes — Fantail will beat any like-for-like written quote by 5% on residential heat pump and air conditioning installs. Provide a written quote from a licensed Wellington contractor for the same unit and scope; conditions apply."}}]}</script>
+</head>
+<body>
+<div id="progress"></div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header id="hdr" class="fixed top-0 inset-x-0 z-50 transition-all duration-300" style="background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid transparent;">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-[70px]">
+    <a href="index.html"><img src="https://imagedelivery.net/xaKlCos5cTg_1RWzIu_h-A/17ea4896-89bf-4efe-b603-f9c128bedc00/public" alt="Fantail Services" class="h-[50px] py-0.5"></a>
+    <nav class="hidden lg:flex items-center gap-8">
+      <a href="index.html"       class="text-white  text-[13px] font-jakarta font-semibold hover:text-[#EC263C] transition-colors">Home</a>
+      <a href="commercial.html"  class="text-[#555] text-[13px] font-jakarta font-medium hover:text-white transition-colors">Commercial</a>
+      <a href="residential.html" class="text-[#555] text-[13px] font-jakarta font-medium hover:text-white transition-colors">Residential</a>
+      <a href="industrial.html" class="text-[#555] text-[13px] font-jakarta font-medium hover:text-white transition-colors">Industrial</a>
+      <a href="#shop"            class="text-[#555] text-[13px] font-jakarta font-medium hover:text-white transition-colors">Shop</a>
+      <a href="showcase.html"    class="text-[#555] text-[13px] font-jakarta font-medium hover:text-white transition-colors">Inside</a>
+      <a href="#services"        class="text-[#555] text-[13px] font-jakarta font-medium hover:text-white transition-colors">Services</a>
+      <a href="#coverage"     class="text-[#555] text-[13px] font-jakarta font-medium hover:text-white transition-colors">Coverage</a>
+      <a href="#about"           class="text-[#555] text-[13px] font-jakarta font-medium hover:text-white transition-colors">About</a>
+    </nav>
+    <div class="hidden lg:flex items-center gap-5">
+      <a href="tel:042124763" class="text-[#555] text-[13px] font-jakarta hover:text-white transition-colors flex items-center gap-2">
+        <i class="fa-solid fa-phone text-[#EC263C] text-[10px]"></i>(04) 212 4763
+      </a>
+      <a href="#contact" class="gbtn bg-[#EC263C] text-white text-[12px] font-archivo uppercase tracking-[.1em] px-5 py-2.5 rounded-[3px]">Get a Quote</a>
+    </div>
+    <button id="mbt" class="lg:hidden text-white p-2 z-50 relative"><i id="mic" class="fa-solid fa-bars text-lg"></i></button>
+  </div>
+  <!-- Mobile -->
+  <div id="mob" class="fixed inset-0 bg-[#0a0a0a] z-40 flex flex-col" style="padding-top:70px;">
+    <div class="p-6 flex flex-col gap-0 flex-1 overflow-y-auto">
+      <a href="index.html"       class="text-white  text-xl font-archivo py-4 border-b border-[#1a1a1a]">Home</a>
+      <a href="commercial.html"  class="text-[#555] text-xl font-jakarta py-4 border-b border-[#1a1a1a] hover:text-white transition-colors">Commercial</a>
+      <a href="residential.html" class="text-[#555] text-xl font-jakarta py-4 border-b border-[#1a1a1a] hover:text-white transition-colors">Residential</a>
+      <a href="industrial.html" class="text-[#555] text-xl font-jakarta py-4 border-b border-[#1a1a1a] hover:text-white transition-colors">Industrial</a>
+      <a href="#shop"            class="text-[#555] text-xl font-jakarta py-4 border-b border-[#1a1a1a] hover:text-white transition-colors">Shop</a>
+      <a href="showcase.html"    class="text-[#555] text-xl font-jakarta py-4 border-b border-[#1a1a1a] hover:text-white transition-colors">Inside</a>
+      <a href="#services"        class="text-[#555] text-xl font-jakarta py-4 border-b border-[#1a1a1a] hover:text-white transition-colors">Services</a>
+      <a href="#coverage"     class="text-[#555] text-xl font-jakarta py-4 border-b border-[#1a1a1a] hover:text-white transition-colors">Coverage</a>
+      <a href="#about"           class="text-[#555] text-xl font-jakarta py-4 border-b border-[#1a1a1a] hover:text-white transition-colors">About</a>
+      <div class="mt-auto pt-8 flex flex-col gap-3">
+        <a href="#contact"      class="bg-[#EC263C] text-white text-center py-4 rounded-[3px] font-archivo uppercase tracking-wider text-sm">Get a Free Quote</a>
+        <a href="tel:042124763" class="border border-[#222] text-white text-center py-4 rounded-[3px] text-sm font-jakarta">(04) 212 4763</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="relative min-h-screen flex items-center bg-[#0a0a0a] overflow-hidden pt-[70px]">
+  <!-- Hero photo background (real installation, darkened) -->
+  <div class="absolute inset-0 pointer-events-none" style="background-image:url('https://images.unsplash.com/photo-1776860150272-653efc74193c?w=1400&q=80&auto=format&fit=crop');background-size:cover;background-position:center;opacity:.22;filter:saturate(.7) contrast(1.05);"></div>
+  <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(180deg,rgba(10,10,10,.55) 0%,rgba(10,10,10,.85) 60%,rgba(10,10,10,1) 100%);"></div>
+  <!-- Background texture: fine grid -->
+  <div class="absolute inset-0 pointer-events-none" style="background-image:radial-gradient(circle,rgba(255,255,255,.028) 1px,transparent 1px);background-size:32px 32px;"></div>
+  <!-- Red glow bottom-left -->
+  <div class="absolute -bottom-60 -left-60 w-[800px] h-[800px] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(236,38,60,.07) 0%,transparent 60%);filter:blur(90px);"></div>
+  <!-- Blue glow top-right -->
+  <div class="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(1,183,241,.05) 0%,transparent 65%);filter:blur(80px);animation:fl 9s ease-in-out infinite 2s;"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-24 w-full">
+    <div class="max-w-4xl mx-auto text-center">
+
+      <div class="inline-flex items-center gap-2 border border-[#222] bg-[#171717] px-4 py-1.5 rounded-full text-xs font-jakarta font-semibold uppercase tracking-widest text-white mb-10 r">
+        <span class="live"></span>Wellington's Most Trusted Specialists
+      </div>
+
+      <h1 class="font-archivo text-white leading-[1] tracking-tight mb-8 rv" style="font-size:clamp(3rem,7.8vw,6.4rem);font-weight:800;padding-bottom:0.1em;">
+        We Keep<br>Wellington
+      </h1>
+      <div class="overflow-hidden rv flex justify-center" style="font-size:clamp(3rem,7.8vw,6.4rem);height:1.12em;margin-top:.04em;margin-bottom:2rem;">
+        <span id="roll-word" class="font-playfair italic block" style="color:var(--red);line-height:1.1;transition:opacity .45s ease,transform .45s cubic-bezier(.16,1,.3,1);">Comfortable.</span>
+      </div>
+
+      <p class="text-[#555] text-base leading-relaxed font-jakarta max-w-xl mx-auto mb-10 r d1">
+        HVAC · Heat Pumps · Electrical · Solar · EV Chargers<br>
+        Commercial, industrial &amp; residential — Wellington since 2010.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-3 mb-10 r d2">
+        <a href="#contact" class="gbtn bg-[#EC263C] text-white px-8 py-3.5 rounded-[3px] font-archivo uppercase text-[12px] tracking-[.1em] flex items-center gap-2.5">Get a Free Quote <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+        <a href="tel:042124763" class="border border-[#222] text-white px-8 py-3.5 rounded-[3px] font-archivo uppercase text-[12px] tracking-[.1em] hover:border-[#EC263C]/50 transition-colors flex items-center gap-2.5"><i class="fa-solid fa-phone text-[#EC263C] text-[10px]"></i>(04) 212 4763</a>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-x-7 gap-y-2 r d3">
+        <span class="text-[#444] text-xs font-jakarta flex items-center gap-2"><i class="fa-solid fa-check text-[#EC263C] text-[9px]"></i>COC Certified</span>
+        <span class="text-[#444] text-xs font-jakarta flex items-center gap-2"><i class="fa-solid fa-check text-[#EC263C] text-[9px]"></i>BWOF 12A Compliant</span>
+        <span class="text-[#444] text-xs font-jakarta flex items-center gap-2"><i class="fa-solid fa-check text-[#EC263C] text-[9px]"></i>24/7 Emergency</span>
+        <span class="text-[#444] text-xs font-jakarta flex items-center gap-2"><i class="fa-solid fa-check text-[#EC263C] text-[9px]"></i>Est. 2010</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Ticker -->
+  <div class="absolute bottom-0 inset-x-0 border-t border-[#1a1a1a] py-2.5 overflow-hidden bg-[#0f0f0f]">
+    <div class="flex whitespace-nowrap mq">
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">HVAC</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Heat Pumps</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Refrigeration</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Electrical</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#EC263C] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">5% Price Beat</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Solar PV</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">EV Chargers</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Seismic Bracing</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Ventilation</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#EC263C] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">BWOF 12A</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">24/7 Emergency</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">HVAC</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Heat Pumps</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Refrigeration</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Electrical</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#EC263C] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">5% Price Beat</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Solar PV</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">EV Chargers</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Seismic Bracing</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">Ventilation</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#EC263C] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">BWOF 12A</span><span class="text-[#1f1f1f] mx-2">·</span>
+      <span class="text-[#383838] text-[10px] font-archivo uppercase tracking-[.22em] mx-6">24/7 Emergency</span><span class="text-[#1f1f1f] mx-2">·</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ TRUST NUMBERS ═══════════ -->
+<section class="bg-[#111] border-y border-[#1a1a1a]">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-[#1a1a1a]">
+      <div class="text-center px-6 r"><div class="font-archivo text-4xl text-white ctr" data-target="22">0</div><div class="text-[#444] text-[10px] font-jakarta mt-1.5 uppercase tracking-widest">Vehicles</div></div>
+      <div class="text-center px-6 r d1"><div class="font-archivo text-4xl text-white ctr" data-target="42">0</div><div class="text-[#444] text-[10px] font-jakarta mt-1.5 uppercase tracking-widest">Staff</div></div>
+      <div class="text-center px-6 r d2"><div class="font-archivo text-4xl text-[#EC263C] ctr" data-target="15">0</div><div class="text-[#444] text-[10px] font-jakarta mt-1.5 uppercase tracking-widest">Years Active</div></div>
+      <div class="text-center px-6 r d3"><div class="font-archivo text-4xl text-white">$<span class="ctr" data-target="3.1" data-dec="true">0</span>M</div><div class="text-[#444] text-[10px] font-jakarta mt-1.5 uppercase tracking-widest">Largest Project</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ THREE-UP: RESIDENTIAL / COMMERCIAL / INDUSTRIAL ═══════════ -->
+<div class="div-g"></div>
+<section class="bg-[#0a0a0a] py-20 lg:py-24">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <p class="lbl mb-5 r">Built for All Three</p>
+      <h2 class="font-archivo text-4xl md:text-5xl text-white leading-[1.05] r d1">Pick your job.<br><em class="not-italic font-playfair italic" style="color:var(--red);font-weight:600;">We're built for it.</em></h2>
+      <p class="text-[#888] leading-relaxed font-jakarta text-[15px] r d2 mt-7">Residential heat pumps and EV chargers. Commercial fit-outs and BWOF compliance. Industrial refrigeration and mechanical services. One in-house team, full accountability across all three.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-5">
+
+      <!-- RESIDENTIAL -->
+      <a href="residential.html" class="group relative overflow-hidden block rounded-[10px] border border-[#1a1a1a] hover:border-[#EC263C]/40 transition-colors r" style="min-height:440px;">
+        <div class="absolute inset-0">
+          <img src="https://imagedelivery.net/xaKlCos5cTg_1RWzIu_h-A/2381949d-56b1-479c-8ac3-1414842efb00/public" alt="Wellington residential home" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]">
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(10,10,10,.96) 0%,rgba(10,10,10,.55) 45%,rgba(10,10,10,.1) 100%);"></div>
+        </div>
+        <div class="relative z-10 p-8 flex flex-col justify-end h-full" style="min-height:440px;">
+          <span class="inline-block self-start px-2.5 py-1 mb-4 border border-[#EC263C]/40 bg-[#EC263C]/15 text-[#EC263C] text-[10px] font-archivo font-bold uppercase tracking-[.18em] rounded-full">Residential</span>
+          <h3 class="font-archivo text-3xl text-white mb-4 leading-[1.1]">Home Comfort.<br><em class="not-italic font-playfair italic" style="color:#fff;font-weight:600;">Done right.</em></h3>
+          <ul class="space-y-1.5 mb-7">
+            <li class="text-[#bbb] text-sm font-jakarta flex items-center gap-2.5"><span class="w-1 h-1 rounded-full bg-[#EC263C] flex-shrink-0"></span>Heat pumps, solar PV &amp; EV chargers</li>
+            <li class="text-[#bbb] text-sm font-jakarta flex items-center gap-2.5"><span class="w-1 h-1 rounded-full bg-[#EC263C] flex-shrink-0"></span>Smart panels &amp; HRU ventilation</li>
+            <li class="text-[#bbb] text-sm font-jakarta flex items-center gap-2.5"><span class="w-1 h-1 rounded-full bg-[#EC263C] flex-shrink-0"></span>5% price beat guarantee</li>
+          </ul>
+          <span class="text-white text-sm font-archivo uppercase tracking-[.1em] flex items-center gap-2.5 group-hover:gap-4 transition-all">Explore Residential <i class="fa-solid fa-arrow-right text-[11px]"></i></span>
+        </div>
+      </a>
+
+      <!-- COMMERCIAL -->
+      <a href="commercial.html" class="group relative overflow-hidden block rounded-[10px] border border-[#1a1a1a] hover:border-[#01B7F1]/40 transition-colors r d1" style="min-height:440px;">
+        <div class="absolute inset-0">
+          <img src="https://imagedelivery.net/xaKlCos5cTg_1RWzIu_h-A/2c733409-dc95-4d06-59e6-f2d1a607d200/publicContain" alt="Commercial HVAC project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]">
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(10,10,10,.96) 0%,rgba(10,10,10,.55) 45%,rgba(10,10,10,.1) 100%);"></div>
+        </div>
+        <div class="relative z-10 p-8 flex flex-col justify-end h-full" style="min-height:440px;">
+          <span class="inline-block self-start px-2.5 py-1 mb-4 border border-[#01B7F1]/40 bg-[#01B7F1]/15 text-[#01B7F1] text-[10px] font-archivo font-bold uppercase tracking-[.18em] rounded-full">Commercial</span>
+          <h3 class="font-archivo text-3xl text-white mb-4 leading-[1.1]">Buildings,<br><em class="not-italic font-playfair italic" style="color:#fff;font-weight:600;">delivered.</em></h3>
+          <ul class="space-y-1.5 mb-7">
+            <li class="text-[#bbb] text-sm font-jakarta flex items-center gap-2.5"><span class="w-1 h-1 rounded-full bg-[#01B7F1] flex-shrink-0"></span>Multi-million-dollar M&amp;E packages</li>
+            <li class="text-[#bbb] text-sm font-jakarta flex items-center gap-2.5"><span class="w-1 h-1 rounded-full bg-[#01B7F1] flex-shrink-0"></span>Design &amp; build, M&amp;E package</li>
+            <li class="text-[#bbb] text-sm font-jakarta flex items-center gap-2.5"><span class="w-1 h-1 rounded-full bg-[#01B7F1] flex-shrink-0"></span>PS1 / PS3 / BWOF 12A in-house</li>
+          </ul>
+          <span class="text-white text-sm font-archivo uppercase tracking-[.1em] flex items-center gap-2.5 group-hover:gap-4 transition-all">Explore Commercial <i class="fa-solid fa-arrow-right text-[11px]"></i></span>
+        </div>
+      </a>
+
+      <!-- INDUSTRIAL (NEW) -->
+      <a href="industrial.html" class="group relative overflow-hidden block rounded-[10px] border border-[#1a1a1a] hover:border-[#EC263C]/40 transition-colors r d2" style="min-height:440px;">
+        <div class="absolute inset-0">
+          <img src="https://images.unsplash.com/photo-1716643863806-989dd76ae093?w=1400&q=80&auto=format&fit=crop" alt="Industrial plant with pipes and mechanical services" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]">
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(10,10,10,.96) 0%,rgba(10,10,10,.55) 45%,rgba(10,10,10,.1) 100%);"></div>
+        </div>
+        <div class="relative z-10 p-8 flex flex-col justify-end h-full" style="min-height:440px;">
+          <span class="inline-block self-start px-2.5 py-1 mb-4 border border-[#EC263C]/40 bg-[#EC263C]/15 text-[#EC263C] text-[10px] font-archivo font-bold uppercase tracking-[.18em] rounded-full">Industrial</span>
+          <h3 class="font-archivo text-3xl text-white mb-4 leading-[1.1]">Plant &amp; process,<br><em class="not-italic font-playfair italic" style="color:#fff;font-weight:600;">kept running.</em></h3>
+          <ul class="space-y-1.5 mb-7">
+            <li class="text-[#bbb] text-sm font-jakarta flex items-center gap-2.5"><span class="w-1 h-1 rounded-full bg-[#EC263C] flex-shrink-0"></span>Industrial refrigeration &amp; cold storage</li>
+            <li class="text-[#bbb] text-sm font-jakarta flex items-center gap-2.5"><span class="w-1 h-1 rounded-full bg-[#EC263C] flex-shrink-0"></span>Process ventilation &amp; mechanical</li>
+            <li class="text-[#bbb] text-sm font-jakarta flex items-center gap-2.5"><span class="w-1 h-1 rounded-full bg-[#EC263C] flex-shrink-0"></span>24/7 asset management &amp; uptime</li>
+          </ul>
+          <span class="text-white text-sm font-archivo uppercase tracking-[.1em] flex items-center gap-2.5 group-hover:gap-4 transition-all">Explore Industrial <i class="fa-solid fa-arrow-right text-[11px]"></i></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+<div class="div-g"></div>
+
+
+<!-- ═══════════ SERVICES ═══════════ -->
+<section id="services" class="bg-[#0a0a0a] py-28">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-2 gap-16 items-end mb-16">
+      <div class="r">
+        <p class="lbl mb-4">What We Do</p>
+        <h2 class="font-archivo text-4xl md:text-5xl text-white leading-[1.05]">Six Services.<br><em class="not-italic font-playfair italic" style="color:var(--red);font-weight:600;">One in-house team.</em></h2>
+      </div>
+      <div class="r d1">
+        <div class="al mb-4"></div>
+        <p class="text-[#555] leading-relaxed font-jakarta text-[15px]">No subcontractors. No finger-pointing. Every Fantail job — from a single residential heat pump to a multi-million-dollar commercial fit-out — is delivered by our own people, with one accountable team from quote to commission.</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <a href="commercial.html" class="card group bg-[#0d0d0d] border border-[#1a1a1a] rounded-[8px] overflow-hidden hover:border-[#EC263C]/40 r">
+        <div class="aspect-[16/9] overflow-hidden bg-[#111] relative">
+          <img src="https://images.unsplash.com/photo-1776860150272-653efc74193c?w=1400&q=80&auto=format&fit=crop" alt="Commercial HVAC installation in Wellington" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent opacity-70"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <i class="fa-solid fa-building text-[#EC263C] text-sm"></i>
+            <h3 class="font-archivo text-white text-sm font-semibold">Commercial HVAC</h3>
+          </div>
+          <p class="text-[#666] text-sm leading-relaxed font-jakarta mb-5">Large-scale heating, ventilation and air conditioning for commercial and industrial buildings. Design through to commissioning.</p>
+          <span class="text-[#EC263C] text-xs flex items-center gap-1.5 font-jakarta font-semibold uppercase tracking-wider group-hover:gap-3 transition-all">Explore <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+        </div>
+      </a>
+
+      <a href="residential.html" class="card group bg-[#0d0d0d] border border-[#1a1a1a] rounded-[8px] overflow-hidden hover:border-[#01B7F1]/40 r d1">
+        <div class="aspect-[16/9] overflow-hidden bg-[#111] relative">
+          <img src="https://www.fantailservices.co.nz/wp-content/uploads/2024/11/Heating-and-Air-Conditioning-Fantail.jpg" alt="Residential heat pump installation" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent opacity-70"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <i class="fa-solid fa-house-signal text-[#01B7F1] text-sm"></i>
+            <h3 class="font-archivo text-white text-sm font-semibold">Residential Heat Pumps</h3>
+          </div>
+          <p class="text-[#666] text-sm leading-relaxed font-jakarta mb-5">Expert heat pump installation, servicing and maintenance for Wellington homes. We beat any residential quote by 5%.</p>
+          <span class="text-[#EC263C] text-xs flex items-center gap-1.5 font-jakarta font-semibold uppercase tracking-wider group-hover:gap-3 transition-all">Explore <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+        </div>
+      </a>
+
+      <a href="#contact" class="card group bg-[#0d0d0d] border border-[#1a1a1a] rounded-[8px] overflow-hidden hover:border-[#EC263C]/40 r d2">
+        <div class="aspect-[16/9] overflow-hidden bg-[#111] relative">
+          <img src="https://www.fantailservices.co.nz/wp-content/uploads/2024/11/Electrical-and-Solar-Data.jpg" alt="Electrical and solar installation work" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent opacity-70"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <i class="fa-solid fa-bolt text-[#EC263C] text-sm"></i>
+            <h3 class="font-archivo text-white text-sm font-semibold">Electrical Services</h3>
+          </div>
+          <p class="text-[#666] text-sm leading-relaxed font-jakarta mb-5">Full electrical installations, fuse board upgrades, LED lighting, rewiring and COC certifications across Wellington.</p>
+          <span class="text-[#EC263C] text-xs flex items-center gap-1.5 font-jakarta font-semibold uppercase tracking-wider group-hover:gap-3 transition-all">Enquire <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+        </div>
+      </a>
+
+      <a href="residential.html" class="card group bg-[#0d0d0d] border border-[#1a1a1a] rounded-[8px] overflow-hidden hover:border-[#01B7F1]/40 r">
+        <div class="aspect-[16/9] overflow-hidden bg-[#111] relative">
+          <img src="https://images.unsplash.com/photo-1745187946672-2c1d8cf26a2b?w=1200&q=80&auto=format&fit=crop" alt="Solar PV and EV charger installation" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent opacity-70"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <i class="fa-solid fa-solar-panel text-[#01B7F1] text-sm"></i>
+            <h3 class="font-archivo text-white text-sm font-semibold">Solar &amp; EV Chargers</h3>
+          </div>
+          <p class="text-[#666] text-sm leading-relaxed font-jakarta mb-5">Solar PV installations and EV charger setup for homes and businesses. Future-proof your energy use today.</p>
+          <span class="text-[#EC263C] text-xs flex items-center gap-1.5 font-jakarta font-semibold uppercase tracking-wider group-hover:gap-3 transition-all">Explore <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+        </div>
+      </a>
+
+      <a href="commercial.html" class="card group bg-[#0d0d0d] border border-[#1a1a1a] rounded-[8px] overflow-hidden hover:border-[#EC263C]/40 r d1">
+        <div class="aspect-[16/9] overflow-hidden bg-[#111] relative">
+          <img src="https://images.unsplash.com/photo-1564998115952-368e7d4969ea?w=1200&q=80&auto=format&fit=crop" alt="Commercial refrigeration and cool room install" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent opacity-70"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <i class="fa-solid fa-snowflake text-[#EC263C] text-sm"></i>
+            <h3 class="font-archivo text-white text-sm font-semibold">Refrigeration</h3>
+          </div>
+          <p class="text-[#666] text-sm leading-relaxed font-jakarta mb-5">Commercial cool rooms, server temperature control, freezer units and ongoing refrigeration maintenance.</p>
+          <span class="text-[#EC263C] text-xs flex items-center gap-1.5 font-jakarta font-semibold uppercase tracking-wider group-hover:gap-3 transition-all">Explore <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+        </div>
+      </a>
+
+      <a href="#contact" class="card group bg-[#0d0d0d] border border-[#1a1a1a] rounded-[8px] overflow-hidden hover:border-[#01B7F1]/40 r d2">
+        <div class="aspect-[16/9] overflow-hidden bg-[#111] relative">
+          <img src="https://www.fantailservices.co.nz/wp-content/uploads/2024/11/Service-Maintenance.jpg" alt="Service and maintenance team at work" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent opacity-70"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <i class="fa-solid fa-screwdriver-wrench text-[#01B7F1] text-sm"></i>
+            <h3 class="font-archivo text-white text-sm font-semibold">Service &amp; Maintenance</h3>
+          </div>
+          <p class="text-[#666] text-sm leading-relaxed font-jakarta mb-5">24/7 emergency callout, preventative maintenance programmes and service contracts for complete peace of mind.</p>
+          <span class="text-[#EC263C] text-xs flex items-center gap-1.5 font-jakarta font-semibold uppercase tracking-wider group-hover:gap-3 transition-all">Enquire <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ SHOP / E-COMMERCE PREVIEW ═══════════ -->
+<section id="shop" class="bg-[#0a0a0a] py-28 lg:py-32 relative overflow-hidden border-y border-[#1a1a1a]">
+  <!-- Background accent -->
+  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(236,38,60,.10),transparent 70%);"></div>
+  <div class="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(1,183,241,.06),transparent 65%);filter:blur(80px);"></div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 relative">
+
+    <!-- Header -->
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span class="inline-flex items-center gap-2 px-3 py-1 mb-6 border border-[#EC263C]/40 bg-[#EC263C]/10 text-[#EC263C] text-[10px] font-archivo font-bold uppercase tracking-[.22em] rounded-full r">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#EC263C] animate-pulse"></span>The Fantail Shop · Coming Soon
+      </span>
+      <h2 class="font-archivo text-4xl md:text-5xl lg:text-6xl text-white leading-[1.05] r d1">Buy direct.<br><em class="not-italic font-playfair italic" style="color:var(--red);font-weight:600;">Skip the markup.</em></h2>
+      <div class="al mt-7 mx-auto r d2"></div>
+      <p class="text-[#888] leading-relaxed font-jakarta text-[15px] r d3 mt-7">Order heat pumps, EV chargers, solar systems and home ventilation direct from Fantail. Trade pricing, certified install, and our 5% beat-the-quote promise — all in one place.</p>
+    </div>
+
+    <!-- Product tiles -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
+
+      <!-- Heat Pumps -->
+      <div class="group relative border border-[#1a1a1a] rounded-[10px] overflow-hidden bg-[#0d0d0d] hover:border-[#EC263C]/40 transition-colors r">
+        <div class="aspect-[16/10] overflow-hidden bg-[#111] relative">
+          <img src="https://images.unsplash.com/photo-1776860150272-653efc74193c?w=900&q=80&auto=format&fit=crop" alt="Modern outdoor heat pump unit" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent opacity-60"></div>
+          <span class="absolute top-3 left-3 px-2.5 py-1 bg-[#EC263C] text-white text-[9px] font-archivo font-bold uppercase tracking-[.18em] rounded">Best Seller</span>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-2.5">
+            <h3 class="font-archivo text-white font-bold text-base">Heat Pumps</h3>
+            <span class="text-[10px] font-jakarta text-[#555] uppercase tracking-wider">Supply &amp; Install</span>
+          </div>
+          <p class="text-[#888] text-xs font-jakarta leading-relaxed mb-5">Mitsubishi, Daikin, Panasonic. Sized by certified team. Installed within 2 weeks.</p>
+          <div class="flex items-center justify-between">
+            <div><span class="text-[#666] text-[10px] font-jakarta uppercase tracking-wider">From</span> <span class="text-white text-lg font-archivo font-bold">$1,299</span></div>
+            <a href="#contact" class="text-[#EC263C] text-xs font-archivo uppercase tracking-wider flex items-center gap-1.5 group-hover:gap-3 transition-all">Shop <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- EV Chargers -->
+      <div class="group relative border border-[#1a1a1a] rounded-[10px] overflow-hidden bg-[#0d0d0d] hover:border-[#01B7F1]/40 transition-colors r d1">
+        <div class="aspect-[16/10] overflow-hidden bg-[#111] relative">
+          <img src="https://images.unsplash.com/photo-1628630470704-851b2a73271b?w=900&q=80&auto=format&fit=crop" alt="EV charging station" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent opacity-60"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-2.5">
+            <h3 class="font-archivo text-white font-bold text-base">EV Chargers</h3>
+            <span class="text-[10px] font-jakarta text-[#555] uppercase tracking-wider">Supply &amp; Install</span>
+          </div>
+          <p class="text-[#888] text-xs font-jakarta leading-relaxed mb-5">7kW &amp; 22kW wall-mount. Tesla, EVNEX, Wallbox. Certified electrician install included.</p>
+          <div class="flex items-center justify-between">
+            <div><span class="text-[#666] text-[10px] font-jakarta uppercase tracking-wider">From</span> <span class="text-white text-lg font-archivo font-bold">$1,499</span></div>
+            <a href="#contact" class="text-[#EC263C] text-xs font-archivo uppercase tracking-wider flex items-center gap-1.5 group-hover:gap-3 transition-all">Shop <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Solar PV -->
+      <div class="group relative border border-[#1a1a1a] rounded-[10px] overflow-hidden bg-[#0d0d0d] hover:border-[#EC263C]/40 transition-colors r d2">
+        <div class="aspect-[16/10] overflow-hidden bg-[#111] relative">
+          <img src="https://images.unsplash.com/photo-1745187946672-2c1d8cf26a2b?w=900&q=80&auto=format&fit=crop" alt="Residential rooftop solar PV" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent opacity-60"></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-2.5">
+            <h3 class="font-archivo text-white font-bold text-base">Solar PV Systems</h3>
+            <span class="text-[10px] font-jakarta text-[#555] uppercase tracking-wider">Supply &amp; Install</span>
+          </div>
+          <p class="text-[#888] text-xs font-jakarta leading-relaxed mb-5">5kW–10kW residential systems. Sungrow / Fronius inverters. Battery-ready packages.</p>
+          <div class="flex items-center justify-between">
+            <div><span class="text-[#666] text-[10px] font-jakarta uppercase tracking-wider">From</span> <span class="text-white text-lg font-archivo font-bold">$7,500</span></div>
+            <a href="#contact" class="text-[#EC263C] text-xs font-archivo uppercase tracking-wider flex items-center gap-1.5 group-hover:gap-3 transition-all">Shop <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hot Water Heat Pumps -->
+      <div class="group relative border border-[#1a1a1a] rounded-[10px] overflow-hidden bg-[#0d0d0d] hover:border-[#EC263C]/40 transition-colors r">
+        <div class="aspect-[16/10] overflow-hidden bg-[#111] relative flex items-center justify-center" style="background:radial-gradient(circle at 50% 40%,#1a0a0c,#0d0d0d 70%);">
+          <i class="fa-solid fa-temperature-arrow-up text-[#EC263C]/70 text-[64px]"></i>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-2.5">
+            <h3 class="font-archivo text-white font-bold text-base">Hot Water Heat Pumps</h3>
+            <span class="text-[10px] font-jakarta text-[#555] uppercase tracking-wider">Supply &amp; Install</span>
+          </div>
+          <p class="text-[#888] text-xs font-jakarta leading-relaxed mb-5">Reclaim Energy, Apricus, Stiebel Eltron. Cut water heating costs by up to 70%.</p>
+          <div class="flex items-center justify-between">
+            <div><span class="text-[#666] text-[10px] font-jakarta uppercase tracking-wider">From</span> <span class="text-white text-lg font-archivo font-bold">$2,499</span></div>
+            <a href="#contact" class="text-[#EC263C] text-xs font-archivo uppercase tracking-wider flex items-center gap-1.5 group-hover:gap-3 transition-all">Shop <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Smart Electrical Panels -->
+      <div class="group relative border border-[#1a1a1a] rounded-[10px] overflow-hidden bg-[#0d0d0d] hover:border-[#01B7F1]/40 transition-colors r d1">
+        <div class="aspect-[16/10] overflow-hidden bg-[#111] relative flex items-center justify-center" style="background:radial-gradient(circle at 50% 40%,#001a25,#0d0d0d 70%);">
+          <i class="fa-solid fa-bolt text-[#01B7F1]/70 text-[64px]"></i>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-2.5">
+            <h3 class="font-archivo text-white font-bold text-base">Smart Electrical Panels</h3>
+            <span class="text-[10px] font-jakarta text-[#555] uppercase tracking-wider">Supply &amp; Install</span>
+          </div>
+          <p class="text-[#888] text-xs font-jakarta leading-relaxed mb-5">Whole-home monitoring, surge protection, EV-ready load management. App-controlled.</p>
+          <div class="flex items-center justify-between">
+            <div><span class="text-[#666] text-[10px] font-jakarta uppercase tracking-wider">From</span> <span class="text-white text-lg font-archivo font-bold">$1,899</span></div>
+            <a href="#contact" class="text-[#EC263C] text-xs font-archivo uppercase tracking-wider flex items-center gap-1.5 group-hover:gap-3 transition-all">Shop <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- HRU Ventilation -->
+      <div class="group relative border border-[#1a1a1a] rounded-[10px] overflow-hidden bg-[#0d0d0d] hover:border-[#EC263C]/40 transition-colors r d2">
+        <div class="aspect-[16/10] overflow-hidden bg-[#111] relative flex items-center justify-center" style="background:radial-gradient(circle at 50% 40%,#1a0a0c,#0d0d0d 70%);">
+          <i class="fa-solid fa-fan text-[#EC263C]/70 text-[64px]"></i>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-2.5">
+            <h3 class="font-archivo text-white font-bold text-base">HRU Ventilation</h3>
+            <span class="text-[10px] font-jakarta text-[#555] uppercase tracking-wider">Supply &amp; Install</span>
+          </div>
+          <p class="text-[#888] text-xs font-jakarta leading-relaxed mb-5">Heat Recovery Ventilation for new builds &amp; retrofits. SmartVent, HRV. Whole-home fresh air.</p>
+          <div class="flex items-center justify-between">
+            <div><span class="text-[#666] text-[10px] font-jakarta uppercase tracking-wider">From</span> <span class="text-white text-lg font-archivo font-bold">$3,499</span></div>
+            <a href="#contact" class="text-[#EC263C] text-xs font-archivo uppercase tracking-wider flex items-center gap-1.5 group-hover:gap-3 transition-all">Shop <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- AI Price-Match Callout -->
+    <div class="border border-[#EC263C]/30 rounded-[14px] relative overflow-hidden r" style="background:linear-gradient(135deg,#0d0d0d 0%,#150708 50%,#0d0d0d 100%);">
+      <div class="absolute -top-20 -right-20 w-[400px] h-[400px] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(236,38,60,.18),transparent 65%);filter:blur(50px);"></div>
+      <div class="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(1,183,241,.10),transparent 65%);filter:blur(50px);"></div>
+
+      <div class="relative grid lg:grid-cols-2 gap-10 lg:gap-16 items-center p-8 md:p-12 lg:p-16">
+
+        <!-- Left: pitch -->
+        <div>
+          <span class="inline-flex items-center gap-2 px-3 py-1 mb-6 border border-[#EC263C]/40 bg-[#EC263C]/15 text-[#EC263C] text-[10px] font-archivo font-bold uppercase tracking-[.22em] rounded-full">
+            <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>AI Price-Match
+          </span>
+          <h3 class="font-archivo text-3xl md:text-4xl text-white leading-[1.1] mb-5">Got a quote from<br>someone else?<br><em class="not-italic font-playfair italic" style="color:var(--red);font-weight:600;">Upload it. We beat it.</em></h3>
+          <p class="text-[#888] font-jakarta leading-relaxed mb-7 max-w-md">Drop in your competitor's quote. Our AI reads every line, finds the equivalent gear in our catalogue, and beats the price — automatically. No haggling, no waiting, no spreadsheets.</p>
+          <div class="flex flex-wrap gap-5 items-center">
+            <a href="#contact" class="gbtn inline-flex items-center gap-3 bg-[#EC263C] text-white px-7 py-3.5 rounded-[3px] font-archivo uppercase text-[12px] tracking-[.12em]">Try It Free <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+            <div class="flex items-center gap-2 text-[#666] text-xs font-jakarta"><i class="fa-solid fa-bolt text-[#EC263C] text-[10px]"></i>Average saving: 7–12%</div>
+          </div>
+        </div>
+
+        <!-- Right: mock upload UI -->
+        <div class="relative">
+          <div class="border-2 border-dashed border-[#2a2a2a] rounded-[12px] p-8 md:p-10 text-center bg-[#0a0a0a]/60 backdrop-blur-sm">
+            <div class="w-14 h-14 mx-auto mb-5 rounded-full bg-[#EC263C]/10 border border-[#EC263C]/30 flex items-center justify-center">
+              <i class="fa-solid fa-file-arrow-up text-[#EC263C] text-xl"></i>
+            </div>
+            <p class="text-white text-base font-archivo font-bold mb-2">Drop your quote here</p>
+            <p class="text-[#666] text-xs font-jakarta mb-5">PDF, JPG or screenshot &middot; max 10&nbsp;MB</p>
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-[#0d0d0d] border border-[#1a1a1a] rounded-full text-[10px] font-jakarta uppercase tracking-[.15em]">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse"></span><span class="text-[#22c55e]">Live AI Scan</span>
+            </div>
+          </div>
+          <!-- Floating result badge -->
+          <div class="hidden md:block absolute -bottom-4 -right-4 bg-[#0d0d0d] border border-[#EC263C]/40 rounded-[8px] p-4 shadow-2xl">
+            <div class="text-[#22c55e] text-[10px] font-archivo uppercase tracking-[.18em] mb-1 flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-[10px]"></i>Match found</div>
+            <div class="text-white text-sm font-archivo font-bold">You save <span class="text-[#EC263C]">$487</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <p class="text-center text-[#444] text-[11px] font-jakarta mt-10">Shop launch: Q3 2026 · <span class="text-[#666]">Demo content shown — pricing illustrative</span></p>
+
+  </div>
+</section>
+
+
+<!-- ═══════════ HOW IT WORKS ═══════════ -->
+<section id="process" class="bg-[#0a0a0a] py-28 lg:py-32 relative overflow-hidden border-b border-[#1a1a1a]">
+  <!-- Top accent glow -->
+  <div class="absolute inset-x-0 top-0 h-[400px] pointer-events-none" style="background:radial-gradient(ellipse 50% 100% at 50% 0%,rgba(236,38,60,.06),transparent 70%);"></div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 relative">
+
+    <!-- Header -->
+    <div class="text-center max-w-2xl mx-auto mb-20">
+      <p class="lbl mb-5 r">How We Work</p>
+      <h2 class="font-archivo text-4xl md:text-5xl lg:text-6xl text-white leading-[1.05] r d1">Four Simple Steps.<br><em class="not-italic font-playfair italic" style="color:var(--red);font-weight:600;">Zero surprises.</em></h2>
+      <div class="al mt-7 mx-auto r d2"></div>
+      <p class="text-[#888] leading-relaxed font-jakarta text-[15px] r d3 mt-7">A transparent, predictable process every Fantail project follows — whether it's a single heat pump or a multi-million-dollar commercial fit-out.</p>
+    </div>
+
+    <!-- Steps -->
+    <div class="relative max-w-6xl mx-auto">
+
+      <!-- Desktop connecting line (animates on scroll) -->
+      <div class="hidden lg:block absolute top-[44px] left-[12%] right-[12%] z-0 pointer-events-none">
+        <div class="h-[2px] bg-[#1a1a1a] relative overflow-hidden">
+          <div class="proc-line absolute inset-0" style="background:linear-gradient(90deg,#EC263C 0%,#EC263C 48%,#01B7F1 52%,#01B7F1 100%);"></div>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-y-14 gap-x-6 relative z-10">
+
+        <!-- Step 1 -->
+        <div class="step-card group text-center r">
+          <div class="relative inline-block mb-7">
+            <div class="step-icon relative w-[90px] h-[90px] rounded-full bg-[#0d0d0d] border-2 border-[#222] flex items-center justify-center transition-all duration-500 group-hover:border-[#EC263C] group-hover:bg-[#150708] group-hover:scale-[1.04]" style="box-shadow:0 0 0 6px #0a0a0a;">
+              <i class="fa-solid fa-clipboard-check text-[#EC263C] text-[26px] transition-transform duration-500 group-hover:scale-110"></i>
+              <span class="absolute -bottom-[10px] left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#EC263C] text-white text-[10px] font-archivo font-bold tracking-[.15em]" style="box-shadow:0 0 0 3px #0a0a0a;">01</span>
+            </div>
+          </div>
+          <h3 class="font-archivo text-white text-lg font-bold mb-3 group-hover:text-[#EC263C] transition-colors">Free Site Survey</h3>
+          <p class="text-[#888] text-sm font-jakarta leading-relaxed max-w-[240px] mx-auto">On-site assessment by a senior technician.<br><span class="text-[#EC263C] font-semibold">Same week. No obligation.</span></p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card group text-center r d1">
+          <div class="relative inline-block mb-7">
+            <div class="step-icon relative w-[90px] h-[90px] rounded-full bg-[#0d0d0d] border-2 border-[#222] flex items-center justify-center transition-all duration-500 group-hover:border-[#EC263C] group-hover:bg-[#150708] group-hover:scale-[1.04]" style="box-shadow:0 0 0 6px #0a0a0a;">
+              <i class="fa-solid fa-file-invoice-dollar text-[#EC263C] text-[26px] transition-transform duration-500 group-hover:scale-110"></i>
+              <span class="absolute -bottom-[10px] left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#EC263C] text-white text-[10px] font-archivo font-bold tracking-[.15em]" style="box-shadow:0 0 0 3px #0a0a0a;">02</span>
+            </div>
+          </div>
+          <h3 class="font-archivo text-white text-lg font-bold mb-3 group-hover:text-[#EC263C] transition-colors">Tailored Quote</h3>
+          <p class="text-[#888] text-sm font-jakarta leading-relaxed max-w-[240px] mx-auto">Detailed proposal in your inbox.<br><span class="text-[#EC263C] font-semibold">Fixed price, within 48h.</span></p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card group text-center r d2">
+          <div class="relative inline-block mb-7">
+            <div class="step-icon relative w-[90px] h-[90px] rounded-full bg-[#0d0d0d] border-2 border-[#222] flex items-center justify-center transition-all duration-500 group-hover:border-[#01B7F1] group-hover:bg-[#001a25] group-hover:scale-[1.04]" style="box-shadow:0 0 0 6px #0a0a0a;">
+              <i class="fa-solid fa-helmet-safety text-[#01B7F1] text-[26px] transition-transform duration-500 group-hover:scale-110"></i>
+              <span class="absolute -bottom-[10px] left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#01B7F1] text-white text-[10px] font-archivo font-bold tracking-[.15em]" style="box-shadow:0 0 0 3px #0a0a0a;">03</span>
+            </div>
+          </div>
+          <h3 class="font-archivo text-white text-lg font-bold mb-3 group-hover:text-[#01B7F1] transition-colors">Install &amp; Commission</h3>
+          <p class="text-[#888] text-sm font-jakarta leading-relaxed max-w-[240px] mx-auto">In-house crews. BWOF compliant.<br><span class="text-[#01B7F1] font-semibold">Full PS3 documentation.</span></p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-card group text-center r d3">
+          <div class="relative inline-block mb-7">
+            <div class="step-icon relative w-[90px] h-[90px] rounded-full bg-[#0d0d0d] border-2 border-[#222] flex items-center justify-center transition-all duration-500 group-hover:border-[#01B7F1] group-hover:bg-[#001a25] group-hover:scale-[1.04]" style="box-shadow:0 0 0 6px #0a0a0a;">
+              <i class="fa-solid fa-headset text-[#01B7F1] text-[26px] transition-transform duration-500 group-hover:scale-110"></i>
+              <span class="absolute -bottom-[10px] left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#01B7F1] text-white text-[10px] font-archivo font-bold tracking-[.15em]" style="box-shadow:0 0 0 3px #0a0a0a;">04</span>
+            </div>
+          </div>
+          <h3 class="font-archivo text-white text-lg font-bold mb-3 group-hover:text-[#01B7F1] transition-colors">Ongoing Support</h3>
+          <p class="text-[#888] text-sm font-jakarta leading-relaxed max-w-[240px] mx-auto">Maintenance plans &amp; emergency call-outs.<br><span class="text-[#01B7F1] font-semibold">24/7, for life.</span></p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center mt-20 r d4">
+      <a href="#contact" class="gbtn inline-flex items-center gap-3 bg-[#EC263C] text-white px-8 py-4 rounded-[3px] font-archivo uppercase text-[12px] tracking-[.12em]">Book a Free Site Survey <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+      <p class="text-[#555] text-xs font-jakarta mt-5">No obligation · Response within 2 business hours</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════ PROJECTS ═══════════ -->
+<section id="projects" class="bg-[#0a0a0a] py-28">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-2 gap-16 items-end mb-16">
+      <div class="r">
+        <p class="lbl mb-4">Featured Work</p>
+        <h2 class="font-archivo text-4xl md:text-5xl text-white leading-tight">Projects That<br>Define Us.</h2>
+      </div>
+      <div class="r d1">
+        <div class="al mb-4"></div>
+        <p class="text-[#555] leading-relaxed font-jakarta text-[15px]">Delivering complex building services across Wellington's commercial, healthcare and retail sectors since 2010.</p>
+      </div>
+    </div>
+
+    <div class="border-t border-[#1a1a1a]">
+      <div class="flex flex-col md:flex-row md:items-center justify-between py-8 px-1 gap-4 r border-b border-[#1a1a1a] group hover:bg-[rgba(236,38,60,.015)] transition-colors">
+        <div class="flex items-start gap-6">
+          <span class="font-archivo text-xs text-[#333] tracking-widest mt-1 group-hover:text-[#EC263C] transition-colors">01</span>
+          <div>
+            <h3 class="font-archivo text-white text-xl md:text-2xl mb-1 group-hover:text-[#EC263C] transition-colors">Onslow Medical Centre</h3>
+            <p class="text-[#444] text-sm font-jakarta">Full building services package — Wellington</p>
+          </div>
+        </div>
+        <span class="lbl ml-10 md:ml-0 flex-shrink-0">Healthcare</span>
+      </div>
+      <div class="flex flex-col md:flex-row md:items-center justify-between py-8 px-1 gap-4 r d1 border-b border-[#1a1a1a] group hover:bg-[rgba(236,38,60,.015)] transition-colors">
+        <div class="flex items-start gap-6">
+          <span class="font-archivo text-xs text-[#333] tracking-widest mt-1 group-hover:text-[#EC263C] transition-colors">02</span>
+          <div>
+            <h3 class="font-archivo text-white text-xl md:text-2xl mb-1 group-hover:text-[#EC263C] transition-colors">134 Queens Drive</h3>
+            <p class="text-[#444] text-sm font-jakarta">Mechanical &amp; electrical services — Wellington</p>
+          </div>
+        </div>
+        <span class="lbl ml-10 md:ml-0 flex-shrink-0">Commercial</span>
+      </div>
+      <div class="flex flex-col md:flex-row md:items-center justify-between py-8 px-1 gap-4 r d2 border-b border-[#1a1a1a] group hover:bg-[rgba(236,38,60,.015)] transition-colors">
+        <div class="flex items-start gap-6">
+          <span class="font-archivo text-xs text-[#333] tracking-widest mt-1 group-hover:text-[#EC263C] transition-colors">03</span>
+          <div>
+            <h3 class="font-archivo text-white text-xl md:text-2xl mb-1 group-hover:text-[#EC263C] transition-colors">Whitby New World</h3>
+            <p class="text-[#444] text-sm font-jakarta">HVAC &amp; refrigeration installation — Whitby</p>
+          </div>
+        </div>
+        <span class="lbl ml-10 md:ml-0 flex-shrink-0">Retail</span>
+      </div>
+    </div>
+
+    <div class="mt-10 r d3">
+      <a href="#contact" class="gbtn inline-flex items-center gap-3 bg-[#EC263C] text-white px-7 py-3.5 rounded-[3px] font-archivo uppercase text-[12px] tracking-[.1em]">Discuss Your Project <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ FEATURED PROJECTS & COVERAGE ═══════════ -->
+<section id="coverage" class="bg-[#111] py-28 border-y border-[#1a1a1a]">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <!-- Section header -->
+    <div class="grid lg:grid-cols-2 gap-16 items-end mb-16">
+      <div>
+        <p class="lbl mb-5 r">Featured Work</p>
+        <h2 class="font-archivo text-4xl md:text-5xl text-white leading-tight r d1">Projects That<br>Speak For Themselves.</h2>
+        <div class="al mt-6 r d2"></div>
+      </div>
+      <p class="text-[#555] leading-relaxed font-jakarta text-[15px] r d2 max-w-md">From medical centres to supermarkets, Fantail delivers complex building services packages across Greater Wellington — on time, on spec.</p>
+    </div>
+
+    <!-- Projects grid -->
+    <div class="grid lg:grid-cols-3 gap-5 mb-6">
+
+      <!-- Project 1: Onslow Medical Centre -->
+      <div class="border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] p-7 r hover:border-[#EC263C]/25 transition-colors duration-300">
+        <div class="flex items-center justify-between mb-6">
+          <span class="lbl" style="margin:0;">Healthcare</span>
+          <span class="text-[#EC263C] text-[10px] font-jakarta uppercase tracking-widest">Wellington</span>
+        </div>
+        <div class="al mb-6"></div>
+        <h3 class="font-archivo text-white text-xl font-bold mb-3">Onslow Medical Centre</h3>
+        <p class="text-[#555] text-sm font-jakarta leading-relaxed mb-6">Full building services package — HVAC, ventilation, electrical, and mechanical systems for a modern medical facility requiring precise environmental control.</p>
+        <div class="flex flex-wrap gap-2 mt-auto">
+          <span class="border border-[#1e1e1e] rounded-[3px] px-3 py-1.5 text-[#444] text-[10px] font-jakarta uppercase tracking-wider">HVAC</span>
+          <span class="border border-[#1e1e1e] rounded-[3px] px-3 py-1.5 text-[#444] text-[10px] font-jakarta uppercase tracking-wider">Ventilation</span>
+          <span class="border border-[#1e1e1e] rounded-[3px] px-3 py-1.5 text-[#444] text-[10px] font-jakarta uppercase tracking-wider">Electrical</span>
+          <span class="border border-[#1e1e1e] rounded-[3px] px-3 py-1.5 text-[#444] text-[10px] font-jakarta uppercase tracking-wider">Mechanical</span>
+        </div>
+      </div>
+
+      <!-- Project 2: 134 Queens Drive -->
+      <div class="border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] p-7 r d1 hover:border-[#01B7F1]/25 transition-colors duration-300">
+        <div class="flex items-center justify-between mb-6">
+          <span class="lbl" style="margin:0;">Commercial</span>
+          <span class="text-[#01B7F1] text-[10px] font-jakarta uppercase tracking-widest">Wellington</span>
+        </div>
+        <div class="al mb-6" style="background:var(--blue);"></div>
+        <h3 class="font-archivo text-white text-xl font-bold mb-3">134 Queens Drive</h3>
+        <p class="text-[#555] text-sm font-jakarta leading-relaxed mb-6">Comprehensive mechanical and electrical services installation for a multi-storey commercial building in Wellington, delivered on specification and to programme.</p>
+        <div class="flex flex-wrap gap-2 mt-auto">
+          <span class="border border-[#1e1e1e] rounded-[3px] px-3 py-1.5 text-[#444] text-[10px] font-jakarta uppercase tracking-wider">Mechanical</span>
+          <span class="border border-[#1e1e1e] rounded-[3px] px-3 py-1.5 text-[#444] text-[10px] font-jakarta uppercase tracking-wider">Electrical</span>
+          <span class="border border-[#1e1e1e] rounded-[3px] px-3 py-1.5 text-[#444] text-[10px] font-jakarta uppercase tracking-wider">PS1 Design</span>
+        </div>
+      </div>
+
+      <!-- Project 3: Whitby New World -->
+      <div class="border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] p-7 r d2 hover:border-[#EC263C]/25 transition-colors duration-300">
+        <div class="flex items-center justify-between mb-6">
+          <span class="lbl" style="margin:0;">Retail</span>
+          <span class="text-[#EC263C] text-[10px] font-jakarta uppercase tracking-widest">Whitby</span>
+        </div>
+        <div class="al mb-6"></div>
+        <h3 class="font-archivo text-white text-xl font-bold mb-3">Whitby New World</h3>
+        <p class="text-[#555] text-sm font-jakarta leading-relaxed mb-6">Full HVAC and commercial refrigeration installation for a major supermarket — high-demand systems requiring certified design documentation and ongoing BWOF compliance.</p>
+        <div class="flex flex-wrap gap-2 mt-auto">
+          <span class="border border-[#1e1e1e] rounded-[3px] px-3 py-1.5 text-[#444] text-[10px] font-jakarta uppercase tracking-wider">HVAC</span>
+          <span class="border border-[#1e1e1e] rounded-[3px] px-3 py-1.5 text-[#444] text-[10px] font-jakarta uppercase tracking-wider">Refrigeration</span>
+          <span class="border border-[#1e1e1e] rounded-[3px] px-3 py-1.5 text-[#444] text-[10px] font-jakarta uppercase tracking-wider">BWOF 12A</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sectors + Coverage split -->
+    <div class="grid lg:grid-cols-2 gap-5">
+
+      <!-- Sectors we serve -->
+      <div class="border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] p-8 r d2">
+        <p class="lbl mb-6">Sectors We Serve</p>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-9 h-9 rounded-[4px] bg-[#111] border border-[#1e1e1e] flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-building text-[#EC263C] text-xs"></i>
+            </div>
+            <div>
+              <div class="text-white text-sm font-archivo font-semibold">Commercial Construction</div>
+              <div class="text-[#383838] text-xs font-jakarta">Offices, retail, hospitality &amp; mixed-use</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-9 h-9 rounded-[4px] bg-[#111] border border-[#1e1e1e] flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-industry text-[#EC263C] text-xs"></i>
+            </div>
+            <div>
+              <div class="text-white text-sm font-archivo font-semibold">Industrial</div>
+              <div class="text-[#383838] text-xs font-jakarta">Factories, warehouses &amp; process facilities</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-9 h-9 rounded-[4px] bg-[#111] border border-[#1e1e1e] flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-graduation-cap text-[#01B7F1] text-xs"></i>
+            </div>
+            <div>
+              <div class="text-white text-sm font-archivo font-semibold">Educational</div>
+              <div class="text-[#383838] text-xs font-jakarta">Schools, tertiary &amp; childcare facilities</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-9 h-9 rounded-[4px] bg-[#111] border border-[#1e1e1e] flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-house text-[#01B7F1] text-xs"></i>
+            </div>
+            <div>
+              <div class="text-white text-sm font-archivo font-semibold">Residential</div>
+              <div class="text-[#383838] text-xs font-jakarta">New builds &amp; high-spec fit-outs</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-9 h-9 rounded-[4px] bg-[#111] border border-[#1e1e1e] flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-heart-pulse text-[#EC263C] text-xs"></i>
+            </div>
+            <div>
+              <div class="text-white text-sm font-archivo font-semibold">Healthcare</div>
+              <div class="text-[#383838] text-xs font-jakarta">Medical centres &amp; specialist facilities</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coverage areas -->
+      <div class="border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] p-8 r d3">
+        <div class="flex items-center justify-between mb-2">
+          <p class="lbl" style="margin:0;">Where We Work</p>
+          <span class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse"></span>
+            <span class="text-[#22c55e] text-[9px] font-jakarta font-semibold uppercase tracking-wider">24/7 Response</span>
+          </span>
+        </div>
+        <p class="text-[#383838] text-xs font-jakarta leading-relaxed mb-6 mt-3">22 vehicles deployed across Greater Wellington — from Kāpiti Coast to Upper Hutt, we're always within reach.</p>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div class="flex items-center gap-3 border border-[#1a1a1a] rounded-[4px] px-3.5 py-3">
+            <i class="fa-solid fa-location-dot text-[#EC263C] text-[10px] flex-shrink-0"></i>
+            <div>
+              <div class="text-white text-xs font-archivo">Wellington CBD</div>
+              <div class="text-[#2e2e2e] text-[10px] font-jakarta">Commercial &amp; residential</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 border border-[#EC263C]/20 rounded-[4px] px-3.5 py-3">
+            <i class="fa-solid fa-location-dot text-[#EC263C] text-[10px] flex-shrink-0"></i>
+            <div>
+              <div class="text-white text-xs font-archivo flex items-center gap-1.5">Lower Hutt <span class="text-[#EC263C] text-[9px] font-jakarta bg-[#EC263C]/10 px-1.5 py-0.5 rounded">HQ</span></div>
+              <div class="text-[#2e2e2e] text-[10px] font-jakarta">Head office</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 border border-[#1a1a1a] rounded-[4px] px-3.5 py-3">
+            <i class="fa-solid fa-location-dot text-[#444] text-[10px] flex-shrink-0"></i>
+            <div>
+              <div class="text-white text-xs font-archivo">Upper Hutt</div>
+              <div class="text-[#2e2e2e] text-[10px] font-jakarta">Industrial &amp; commercial</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 border border-[#1a1a1a] rounded-[4px] px-3.5 py-3">
+            <i class="fa-solid fa-location-dot text-[#444] text-[10px] flex-shrink-0"></i>
+            <div>
+              <div class="text-white text-xs font-archivo">Porirua</div>
+              <div class="text-[#2e2e2e] text-[10px] font-jakarta">Residential &amp; commercial</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 border border-[#1a1a1a] rounded-[4px] px-3.5 py-3">
+            <i class="fa-solid fa-location-dot text-[#444] text-[10px] flex-shrink-0"></i>
+            <div>
+              <div class="text-white text-xs font-archivo">Kāpiti Coast</div>
+              <div class="text-[#2e2e2e] text-[10px] font-jakarta">Residential specialists</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 border border-[#1a1a1a] rounded-[4px] px-3.5 py-3">
+            <i class="fa-solid fa-location-dot text-[#444] text-[10px] flex-shrink-0"></i>
+            <div>
+              <div class="text-white text-xs font-archivo">Johnsonville</div>
+              <div class="text-[#2e2e2e] text-[10px] font-jakarta">Residential &amp; commercial</div>
+            </div>
+          </div>
+        </div>
+        <a href="#contact" class="mt-6 inline-flex items-center gap-2 text-[#EC263C] text-xs font-archivo uppercase tracking-wider hover:gap-3 transition-all">Get a Quote in Your Area <i class="fa-solid fa-arrow-right text-[9px]"></i></a>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════ ABOUT ═══════════ -->
+<section id="about" class="bg-[#0a0a0a] py-28">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-2 gap-20 items-center">
+
+      <div class="relative r">
+        <img src="https://imagedelivery.net/xaKlCos5cTg_1RWzIu_h-A/48be1fba-5aa1-4e43-9823-ab07c2ce7b00/public" alt="Fantail Services team" class="w-full h-[520px] object-cover rounded-[6px]">
+        <div class="absolute inset-0 rounded-[6px]" style="background:linear-gradient(to top,rgba(10,10,10,.5) 0%,transparent 60%);"></div>
+        <div class="absolute -bottom-5 -right-5 lg:-right-8 bg-[#111] border border-[#1f1f1f] px-6 py-4 rounded-[4px] hidden md:flex gap-6 divide-x divide-[#1a1a1a] shadow-2xl">
+          <div class="text-center pr-6"><div class="font-archivo text-xl text-white">42</div><div class="text-[#333] text-[10px] font-jakarta mt-0.5 uppercase tracking-wider">Team</div></div>
+          <div class="text-center px-6"><div class="font-archivo text-xl text-white">22</div><div class="text-[#333] text-[10px] font-jakarta mt-0.5 uppercase tracking-wider">Vehicles</div></div>
+          <div class="text-center pl-6"><div class="font-archivo text-xl text-[#EC263C]">2010</div><div class="text-[#333] text-[10px] font-jakarta mt-0.5 uppercase tracking-wider">Founded</div></div>
+        </div>
+      </div>
+
+      <div class="r d2">
+        <p class="lbl mb-5">Founded 2010</p>
+        <h2 class="font-archivo text-4xl md:text-5xl text-white mb-8 leading-tight">Built on Trust,<br>Grown on Results.</h2>
+
+        <blockquote class="border-l-2 border-[#EC263C] pl-6 py-1 mb-8">
+          <p class="text-[#555] text-[15px] leading-relaxed font-jakarta italic">"When founding Fantail, my mission was to be consistently recognised as the supplier of choice, the employer of choice, the solution of choice and a company that supports the communities where we do business."</p>
+        </blockquote>
+
+        <div class="mb-8">
+          <p class="text-white font-archivo text-sm mb-0.5">Chris Spayes</p>
+          <p class="text-[#333] text-sm font-jakarta">Managing Director &amp; Founder</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-8">
+          <div class="bg-[#111] border border-[#1a1a1a] rounded-[4px] p-4">
+            <div class="lbl mb-2">Sectors</div>
+            <div class="text-white text-sm font-jakarta leading-relaxed">Commercial construction, industrial, educational, residential new builds &amp; fit-outs</div>
+          </div>
+          <div class="bg-[#111] border border-[#1a1a1a] rounded-[4px] p-4">
+            <div class="lbl mb-2">Certifications</div>
+            <div class="text-white text-sm font-jakarta leading-relaxed">COC Certified · BWOF 12A · PS1 Design Documentation</div>
+          </div>
+        </div>
+
+        <a href="#contact" class="text-[#EC263C] text-sm font-archivo uppercase tracking-[.1em] flex items-center gap-2.5 hover:gap-4 transition-all">Work With Us <i class="fa-solid fa-arrow-right text-[11px]"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ WHY FANTAIL ═══════════ -->
+<section class="bg-[#111] py-28 border-y border-[#1a1a1a]">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center mb-16 r">
+      <p class="lbl mb-4">The Fantail Difference</p>
+      <h2 class="font-archivo text-4xl md:text-5xl text-white">Why Wellington Chooses Us</h2>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-[6px] overflow-hidden">
+      <div class="why-card bg-[#111] border border-transparent p-8 r group">
+        <div class="w-10 h-10 rounded-[4px] border border-[#EC263C]/18 flex items-center justify-center mb-6 group-hover:border-[#EC263C]/45 transition-colors">
+          <i class="fa-solid fa-users text-[#EC263C] text-sm"></i>
+        </div>
+        <h3 class="font-archivo text-white text-sm mb-3">42 In-House Staff</h3>
+        <p class="text-[#444] text-sm font-jakarta leading-relaxed">Every discipline in-house. No subbies, no gaps — one team responsible for every trade on every project.</p>
+        <div class="why-line mt-6"></div>
+      </div>
+      <div class="why-card bg-[#111] border border-transparent p-8 r d1 group">
+        <div class="w-10 h-10 rounded-[4px] border border-[#01B7F1]/18 flex items-center justify-center mb-6 group-hover:border-[#01B7F1]/45 transition-colors">
+          <i class="fa-solid fa-truck text-[#01B7F1] text-sm"></i>
+        </div>
+        <h3 class="font-archivo text-white text-sm mb-3">22 Rapid Response Vehicles</h3>
+        <p class="text-[#444] text-sm font-jakarta leading-relaxed">Fleet coverage across greater Wellington. Fast deployment for emergency callouts any hour of the day.</p>
+        <div class="why-line mt-6" style="background:var(--blue);"></div>
+      </div>
+      <div class="why-card bg-[#111] border border-transparent p-8 r d2 group">
+        <div class="w-10 h-10 rounded-[4px] border border-[#EC263C]/18 flex items-center justify-center mb-6 group-hover:border-[#EC263C]/45 transition-colors">
+          <i class="fa-solid fa-file-circle-check text-[#EC263C] text-sm"></i>
+        </div>
+        <h3 class="font-archivo text-white text-sm mb-3">BWOF &amp; COC Certified</h3>
+        <p class="text-[#444] text-sm font-jakarta leading-relaxed">BWOF 12A inspections, COC certification and PS1 design documentation — handled in-house, every time.</p>
+        <div class="why-line mt-6"></div>
+      </div>
+      <div class="why-card bg-[#111] border border-transparent p-8 r d3 group">
+        <div class="w-10 h-10 rounded-[4px] border border-[#01B7F1]/18 flex items-center justify-center mb-6 group-hover:border-[#01B7F1]/45 transition-colors">
+          <i class="fa-solid fa-clock text-[#01B7F1] text-sm"></i>
+        </div>
+        <h3 class="font-archivo text-white text-sm mb-3">24/7 Emergency Response</h3>
+        <p class="text-[#444] text-sm font-jakarta leading-relaxed">On-call technicians across Wellington. Critical system failure gets priority — no exceptions, no delays.</p>
+        <div class="why-line mt-6" style="background:var(--blue);"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ TESTIMONIALS ═══════════ -->
+<section class="bg-[#0a0a0a] py-28">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="flex items-end justify-between mb-16">
+      <div>
+        <p class="lbl mb-4 r">What Clients Say</p>
+        <h2 class="font-archivo text-4xl md:text-5xl text-white r d1">Trusted Across Wellington</h2>
+      </div>
+      <a href="#contact" class="hidden md:flex items-center gap-2 text-[#333] text-sm font-jakarta hover:text-white transition-colors r d2">Work with us <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="tcard r border border-[#1a1a1a] rounded-[6px] p-7 bg-[#0d0d0d]">
+        <div class="flex gap-0.5 mb-5"><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i></div>
+        <p class="text-[#555] text-[14px] leading-loose font-jakarta italic mb-6">"Fantail handled the full mechanical package on our building — HVAC, refrigeration and electrical. Delivered on time, on budget. Faultless from start to finish."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-[#EC263C]/10 flex items-center justify-center font-archivo text-[#EC263C] text-xs">JT</div>
+          <div><div class="text-white text-sm font-archivo">James T.</div><div class="text-[#2a2a2a] text-xs font-jakarta mt-0.5">Project Manager, Wellington</div></div>
+        </div>
+      </div>
+      <div class="tcard r d1 border border-[#1a1a1a] rounded-[6px] p-7 bg-[#0d0d0d]">
+        <div class="flex gap-0.5 mb-5"><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i></div>
+        <p class="text-[#555] text-[14px] leading-loose font-jakarta italic mb-6">"We use Fantail for all BWOF compliance across our building portfolio. Reliable, thorough — they show up when they say they will and the paperwork is always spotless."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-[#01B7F1]/10 flex items-center justify-center font-archivo text-[#01B7F1] text-xs">SR</div>
+          <div><div class="text-white text-sm font-archivo">Sarah R.</div><div class="text-[#2a2a2a] text-xs font-jakarta mt-0.5">Property Portfolio Manager</div></div>
+        </div>
+      </div>
+      <div class="tcard r d2 border border-[#1a1a1a] rounded-[6px] p-7 bg-[#0d0d0d]">
+        <div class="flex gap-0.5 mb-5"><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i><i class="fa-solid fa-star text-[#EC263C] text-[10px]"></i></div>
+        <p class="text-[#555] text-[14px] leading-loose font-jakarta italic mb-6">"Server room cooling failed at 11pm. Fantail were on site within an hour. Fixed overnight. Saved us from catastrophic downtime. Couldn't ask for more."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-[#EC263C]/10 flex items-center justify-center font-archivo text-[#EC263C] text-xs">DM</div>
+          <div><div class="text-white text-sm font-archivo">Daniel M.</div><div class="text-[#2a2a2a] text-xs font-jakarta mt-0.5">IT Director, Wellington CBD</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section id="faq" class="bg-[#0a0a0a] py-28 border-y border-[#1a1a1a]">
+  <div class="max-w-5xl mx-auto px-6 lg:px-10">
+
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <p class="lbl mb-5 r">Frequently Asked</p>
+      <h2 class="font-archivo text-4xl md:text-5xl text-white leading-tight r d1">The Questions<br>Wellington Asks Us Most.</h2>
+      <div class="al mt-6 mx-auto r d2"></div>
+    </div>
+
+    <div class="space-y-3" id="faq-list">
+
+      <div class="faq-item border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] hover:border-[#EC263C]/30 transition-colors r">
+        <button type="button" class="faq-toggle w-full flex items-center justify-between gap-6 px-6 py-5 text-left">
+          <span class="font-archivo text-white text-[15px] md:text-base font-semibold">How quickly can you respond to a quote request?</span>
+          <i class="faqi fa-solid fa-plus text-[#EC263C] text-sm flex-shrink-0"></i>
+        </button>
+        <div class="faqb px-6"><p class="text-[#666] text-sm font-jakarta leading-relaxed pb-6 max-w-3xl">Every enquiry gets a response within <strong class="text-white">2 business hours</strong>. Most site surveys are booked within the same week — and our 24/7 line is always live for emergencies.</p></div>
+      </div>
+
+      <div class="faq-item border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] hover:border-[#EC263C]/30 transition-colors r d1">
+        <button type="button" class="faq-toggle w-full flex items-center justify-between gap-6 px-6 py-5 text-left">
+          <span class="font-archivo text-white text-[15px] md:text-base font-semibold">Are quotes and site surveys really free?</span>
+          <i class="faqi fa-solid fa-plus text-[#EC263C] text-sm flex-shrink-0"></i>
+        </button>
+        <div class="faqb px-6"><p class="text-[#666] text-sm font-jakarta leading-relaxed pb-6 max-w-3xl">Yes — every site survey and written quote is <strong class="text-white">free with zero obligation</strong>. No call centre, no pushy sales follow-up. If the numbers don't stack up, we'll tell you straight.</p></div>
+      </div>
+
+      <div class="faq-item border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] hover:border-[#EC263C]/30 transition-colors r d2">
+        <button type="button" class="faq-toggle w-full flex items-center justify-between gap-6 px-6 py-5 text-left">
+          <span class="font-archivo text-white text-[15px] md:text-base font-semibold">Are your installs BWOF, PS1 and COC compliant?</span>
+          <i class="faqi fa-solid fa-plus text-[#EC263C] text-sm flex-shrink-0"></i>
+        </button>
+        <div class="faqb px-6"><p class="text-[#666] text-sm font-jakarta leading-relaxed pb-6 max-w-3xl">Every commercial project ships with full <strong class="text-white">PS1 design documentation, PS3 commissioning certificates</strong> and ongoing BWOF 12A support. We're a licensed Certificate of Compliance issuer for electrical work — all in-house, no chasing third parties.</p></div>
+      </div>
+
+      <div class="faq-item border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] hover:border-[#EC263C]/30 transition-colors r d3">
+        <button type="button" class="faq-toggle w-full flex items-center justify-between gap-6 px-6 py-5 text-left">
+          <span class="font-archivo text-white text-[15px] md:text-base font-semibold">What areas of Wellington do you cover?</span>
+          <i class="faqi fa-solid fa-plus text-[#EC263C] text-sm flex-shrink-0"></i>
+        </button>
+        <div class="faqb px-6"><p class="text-[#666] text-sm font-jakarta leading-relaxed pb-6 max-w-3xl">All of Greater Wellington — from <strong class="text-white">Kāpiti Coast to Wairarapa</strong>. 22 vehicles deployed daily, with the fastest response in Lower Hutt (our HQ), Wellington CBD, Porirua, Upper Hutt and Johnsonville.</p></div>
+      </div>
+
+      <div class="faq-item border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] hover:border-[#EC263C]/30 transition-colors r d4">
+        <button type="button" class="faq-toggle w-full flex items-center justify-between gap-6 px-6 py-5 text-left">
+          <span class="font-archivo text-white text-[15px] md:text-base font-semibold">Do you handle 24/7 emergency callouts?</span>
+          <i class="faqi fa-solid fa-plus text-[#EC263C] text-sm flex-shrink-0"></i>
+        </button>
+        <div class="faqb px-6"><p class="text-[#666] text-sm font-jakarta leading-relaxed pb-6 max-w-3xl">Yes — <strong class="text-white">24/7, every day of the year</strong>. Server-room cooling, refrigeration failures, post-quake building services — our on-call team is in a vehicle within minutes. Most CBD callouts have a tech on site inside the hour.</p></div>
+      </div>
+
+      <div class="faq-item border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] hover:border-[#EC263C]/30 transition-colors r d5">
+        <button type="button" class="faq-toggle w-full flex items-center justify-between gap-6 px-6 py-5 text-left">
+          <span class="font-archivo text-white text-[15px] md:text-base font-semibold">What warranty do you offer on installs?</span>
+          <i class="faqi fa-solid fa-plus text-[#EC263C] text-sm flex-shrink-0"></i>
+        </button>
+        <div class="faqb px-6"><p class="text-[#666] text-sm font-jakarta leading-relaxed pb-6 max-w-3xl">Every install carries our <strong class="text-white">12-month workmanship warranty</strong> on top of full manufacturer warranties — typically 5–7 years on heat pumps, 10 years on solar inverters, 25 years on PV panels. Service-plan customers get extended terms.</p></div>
+      </div>
+
+      <div class="faq-item border border-[#1e1e1e] rounded-[6px] bg-[#0d0d0d] hover:border-[#EC263C]/30 transition-colors r d5">
+        <button type="button" class="faq-toggle w-full flex items-center justify-between gap-6 px-6 py-5 text-left">
+          <span class="font-archivo text-white text-[15px] md:text-base font-semibold">Will you beat another quote on a residential heat pump?</span>
+          <i class="faqi fa-solid fa-plus text-[#EC263C] text-sm flex-shrink-0"></i>
+        </button>
+        <div class="faqb px-6"><p class="text-[#666] text-sm font-jakarta leading-relaxed pb-6 max-w-3xl">Yes — we'll <strong class="text-white">beat any like-for-like written quote by 5%</strong> on residential heat pump and air conditioning installs. Show us a written quote from a licensed Wellington contractor for the same unit and scope, and we'll beat it. Conditions apply — ask us for details.</p></div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-12 r">
+      <p class="text-[#666] text-sm font-jakarta">Still have questions? <a href="#contact" class="text-[#EC263C] font-semibold hover:underline">Send us a note</a> or call <a href="tel:042124763" class="text-[#EC263C] font-semibold hover:underline">(04) 212 4763</a>.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════ CTA BAND ═══════════ -->
+<section class="bg-[#EC263C] relative overflow-hidden py-24">
+  <div class="absolute inset-0 opacity-[.05]" style="background-image:url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22%3E%3Cg fill=%22%23fff%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[200px]" style="background:radial-gradient(ellipse,rgba(255,255,255,.14) 0%,transparent 70%);"></div>
+  <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
+    <p class="text-white/50 text-[10px] font-archivo uppercase tracking-[.3em] mb-5">Wellington's Most Trusted Supplier</p>
+    <h2 class="font-archivo text-white mb-5 leading-tight" style="font-size:clamp(2.4rem,6vw,4.5rem);">Let's Talk<br>About Your Project.</h2>
+    <p class="text-white/70 text-[15px] font-jakarta mb-10">Commercial, industrial or residential — we respond within 2 business hours. 24/7 emergency line always open.</p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <a href="tel:042124763" class="bg-white text-[#0a0a0a] px-8 py-4 rounded-[3px] font-archivo uppercase text-[12px] tracking-[.1em] hover:bg-gray-100 transition-colors flex items-center gap-2.5 shadow-xl"><i class="fa-solid fa-phone text-xs"></i>(04) 212 4763</a>
+      <a href="#contact" class="bg-[#0a0a0a] text-white px-8 py-4 rounded-[3px] font-archivo uppercase text-[12px] tracking-[.1em] hover:bg-[#171717] transition-colors flex items-center gap-2.5 shadow-xl">Send an Enquiry <i class="fa-solid fa-arrow-right text-xs"></i></a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section id="contact" class="bg-[#0a0a0a] py-28">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center mb-16 r">
+      <p class="lbl mb-4">Get in Touch</p>
+      <h2 class="font-archivo text-4xl md:text-5xl text-white">Start a Conversation</h2>
+    </div>
+    <div class="grid lg:grid-cols-5 gap-6">
+      <div class="lg:col-span-2 r space-y-4">
+        <div class="border-t-2 border-[#EC263C] bg-[#0d0d0d] rounded-[6px] p-7">
+          <h3 class="font-archivo text-base text-white mb-6">Contact</h3>
+          <div class="space-y-5">
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-[3px] bg-[rgba(236,38,60,.07)] border border-[rgba(236,38,60,.1)] flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-phone text-[#EC263C] text-xs"></i></div>
+              <div><p class="text-[#2a2a2a] text-[10px] font-archivo uppercase tracking-wider mb-1">Phone</p><a href="tel:042124763" class="text-white text-sm font-jakarta hover:text-[#EC263C] transition-colors">(04) 212 4763</a></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-[3px] bg-[rgba(1,183,241,.07)] border border-[rgba(1,183,241,.1)] flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-envelope text-[#01B7F1] text-xs"></i></div>
+              <div><p class="text-[#2a2a2a] text-[10px] font-archivo uppercase tracking-wider mb-1">Email</p><a href="mailto:office@fantailservices.co.nz" class="text-white text-sm font-jakarta hover:text-[#01B7F1] transition-colors">office@fantailservices.co.nz</a></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-[3px] bg-[rgba(236,38,60,.07)] border border-[rgba(236,38,60,.1)] flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-location-dot text-[#EC263C] text-xs"></i></div>
+              <div><p class="text-[#2a2a2a] text-[10px] font-archivo uppercase tracking-wider mb-1">Head Office</p><p class="text-white text-sm font-jakarta">5 Pretoria Street<br>Hutt Central, Lower Hutt 5010</p></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-[3px] bg-[rgba(1,183,241,.07)] border border-[rgba(1,183,241,.1)] flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-clock text-[#01B7F1] text-xs"></i></div>
+              <div><p class="text-[#2a2a2a] text-[10px] font-archivo uppercase tracking-wider mb-1">Hours</p><p class="text-white text-sm font-jakarta">Mon–Fri: 7:30am – 5:00pm</p><p class="text-[#EC263C] text-xs font-archivo uppercase tracking-wide mt-1">24/7 Emergency Available</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-3 r d1">
+        <div class="border-t-2 border-[#1f1f1f] bg-[#0d0d0d] rounded-[6px] p-7">
+          <h3 class="font-archivo text-base text-white mb-6">Send an Enquiry</h3>
+          <form id="cf" class="space-y-3" novalidate>
+            <div class="grid md:grid-cols-2 gap-3">
+              <div><label class="text-[#2a2a2a] text-[10px] font-archivo uppercase tracking-wider mb-2 block">Name *</label><input type="text" required placeholder="Your name" class="w-full bg-[#0a0a0a] border border-[#1a1a1a] rounded-[3px] px-4 py-3 text-white text-sm font-jakarta focus:border-[#EC263C]/60 focus:outline-none transition-colors placeholder-[#222]"></div>
+              <div><label class="text-[#2a2a2a] text-[10px] font-archivo uppercase tracking-wider mb-2 block">Email *</label><input type="email" required placeholder="your@email.com" class="w-full bg-[#0a0a0a] border border-[#1a1a1a] rounded-[3px] px-4 py-3 text-white text-sm font-jakarta focus:border-[#EC263C]/60 focus:outline-none transition-colors placeholder-[#222]"></div>
+            </div>
+            <div><label class="text-[#2a2a2a] text-[10px] font-archivo uppercase tracking-wider mb-2 block">Phone <span class="text-[#444] normal-case tracking-normal">(optional — fastest response)</span></label><input type="tel" placeholder="Your phone" class="w-full bg-[#0a0a0a] border border-[#1a1a1a] rounded-[3px] px-4 py-3 text-white text-sm font-jakarta focus:border-[#EC263C]/60 focus:outline-none transition-colors placeholder-[#222]"></div>
+            <div><label class="text-[#2a2a2a] text-[10px] font-archivo uppercase tracking-wider mb-2 block">Enquiry Type</label>
+              <select class="w-full bg-[#0a0a0a] border border-[#1a1a1a] rounded-[3px] px-4 py-3 text-white text-sm font-jakarta focus:border-[#EC263C]/60 focus:outline-none transition-colors">
+                <option value="">Select…</option>
+                <option>General Enquiry</option>
+                <option>Commercial HVAC &amp; Refrigeration</option>
+                <option>Electrical Services</option>
+                <option>Seismic Bracing</option>
+                <option>Residential Heat Pumps</option>
+                <option>Home Ventilation</option>
+                <option>Solar PV</option>
+                <option>EV Charger Installation</option>
+                <option>Service &amp; Maintenance</option>
+                <option>Emergency Callout</option>
+              </select>
+            </div>
+            <div><label class="text-[#2a2a2a] text-[10px] font-archivo uppercase tracking-wider mb-2 block">Message</label><textarea rows="4" placeholder="Tell us about your project, property type, scope and timeframe…" class="w-full bg-[#0a0a0a] border border-[#1a1a1a] rounded-[3px] px-4 py-3 text-white text-sm font-jakarta focus:border-[#EC263C]/60 focus:outline-none transition-colors placeholder-[#222] resize-none"></textarea></div>
+            <button type="submit" class="gbtn w-full bg-[#EC263C] text-white py-4 rounded-[3px] font-archivo uppercase tracking-[.1em] text-[12px]">Submit Enquiry <i class="fa-solid fa-arrow-right ml-2 text-[10px]"></i></button>
+            <p class="text-[#1f1f1f] text-xs text-center font-jakarta">We respond within 2 business hours during business hours.</p>
+          </form>
+          <div id="csuc" class="hidden text-center py-12"><i class="fa-solid fa-circle-check text-green-500 text-3xl mb-4"></i><h4 class="font-archivo text-white mb-2">Enquiry Sent</h4><p class="text-[#444] text-sm font-jakarta">We'll be in touch within 2 business hours.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="bg-[#0a0a0a] border-t border-[#111]">
+  <div class="h-px" style="background:linear-gradient(90deg,transparent,#EC263C 40%,#01B7F1 60%,transparent);opacity:.35;"></div>
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-16">
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-[#0f0f0f]">
+      <div>
+        <a href="index.html"><img src="https://imagedelivery.net/xaKlCos5cTg_1RWzIu_h-A/17ea4896-89bf-4efe-b603-f9c128bedc00/public" alt="Fantail Services" class="h-12 mb-6"></a>
+        <p class="text-[#2a2a2a] text-sm font-jakarta leading-relaxed mb-6">Wellington's most trusted HVAC, electrical and energy specialists. Serving the greater Wellington region since 2010.</p>
+        <div class="flex gap-2">
+          <a href="https://www.facebook.com/fantailservices" target="_blank" rel="noopener" class="w-8 h-8 rounded-[3px] bg-[#0f0f0f] border border-[#1a1a1a] flex items-center justify-center text-[#2a2a2a] hover:text-[#EC263C] hover:border-[#EC263C]/25 transition-colors text-xs"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.linkedin.com/company/fantail-services-ltd" target="_blank" rel="noopener" class="w-8 h-8 rounded-[3px] bg-[#0f0f0f] border border-[#1a1a1a] flex items-center justify-center text-[#2a2a2a] hover:text-[#EC263C] hover:border-[#EC263C]/25 transition-colors text-xs"><i class="fa-brands fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-archivo text-white text-[10px] uppercase tracking-[.2em] mb-5">Services</h4>
+        <ul class="space-y-2.5">
+          <li><a href="commercial.html" class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Commercial HVAC</a></li>
+          <li><a href="commercial.html" class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Refrigeration</a></li>
+          <li><a href="commercial.html" class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Electrical Services</a></li>
+          <li><a href="commercial.html" class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Seismic Bracing</a></li>
+          <li><a href="residential.html" class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Residential Heat Pumps</a></li>
+          <li><a href="residential.html" class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Solar PV &amp; EV Chargers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-archivo text-white text-[10px] uppercase tracking-[.2em] mb-5">Company</h4>
+        <ul class="space-y-2.5">
+          <li><a href="index.html"       class="text-[#EC263C] font-archivo text-sm">Home</a></li>
+          <li><a href="commercial.html"  class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Commercial</a></li>
+          <li><a href="residential.html" class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Residential</a></li>
+          <li><a href="industrial.html"  class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Industrial</a></li>
+          <li><a href="#shop"            class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Shop (Coming Soon)</a></li>
+          <li><a href="showcase.html"    class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">Inside Fantail</a></li>
+          <li><a href="#about"           class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">About</a></li>
+          <li><a href="tel:042124763"    class="text-[#EC263C] font-archivo text-sm">24/7 Emergency</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-archivo text-white text-[10px] uppercase tracking-[.2em] mb-5">Contact</h4>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><i class="fa-solid fa-phone text-[#EC263C] mt-1 text-[9px]"></i><a href="tel:042124763" class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta">(04) 212 4763</a></li>
+          <li class="flex items-start gap-3"><i class="fa-solid fa-envelope text-[#01B7F1] mt-1 text-[9px]"></i><a href="mailto:office@fantailservices.co.nz" class="text-[#2a2a2a] hover:text-white transition-colors text-sm font-jakarta break-all">office@fantailservices.co.nz</a></li>
+          <li class="flex items-start gap-3"><i class="fa-solid fa-location-dot text-[#EC263C] mt-1 text-[9px]"></i><span class="text-[#2a2a2a] text-sm font-jakarta">5 Pretoria Street, Hutt Central<br>Lower Hutt 5010</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="flex flex-col md:flex-row justify-between items-center gap-3 pt-8">
+      <p class="text-[#1a1a1a] text-xs font-jakarta">© 2025 Fantail Services Ltd · Serving Wellington Since 2010</p>
+      <div class="flex gap-5"><a href="#" class="text-[#1a1a1a] hover:text-white transition-colors text-xs font-jakarta">Privacy Policy</a><a href="#" class="text-[#1a1a1a] hover:text-white transition-colors text-xs font-jakarta">Terms</a></div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+(function(){
+  /* Rolling word animation */
+  var words=['Comfortable.','Efficient.','Powered.','Warm.','Connected.'];
+  var idx=0;
+  var rw=document.getElementById('roll-word');
+  if(rw&&!window.matchMedia('(prefers-reduced-motion:reduce)').matches){
+    setInterval(function(){
+      rw.style.opacity='0';rw.style.transform='translateY(-14px)';
+      setTimeout(function(){
+        idx=(idx+1)%words.length;
+        rw.textContent=words[idx];
+        rw.style.transition='none';rw.style.transform='translateY(14px)';
+        rw.offsetHeight;
+        rw.style.transition='opacity .45s ease,transform .45s cubic-bezier(.16,1,.3,1)';
+        rw.style.opacity='1';rw.style.transform='translateY(0)';
+      },380);
+    },2800);
+  }
+
+  /* Progress bar */
+  var prog=document.getElementById('progress');
+  window.addEventListener('scroll',function(){
+    prog.style.width=((window.scrollY/(document.documentElement.scrollHeight-innerHeight))*100)+'%';
+  },{passive:true});
+
+  /* Header solidify on scroll */
+  var hdr=document.getElementById('hdr');
+  window.addEventListener('scroll',function(){
+    if(window.scrollY>60){
+      hdr.style.background='rgba(10,10,10,.96)';
+      hdr.style.borderBottomColor='rgba(255,255,255,.04)';
+    }else{
+      hdr.style.background='rgba(10,10,10,.85)';
+      hdr.style.borderBottomColor='transparent';
+    }
+  },{passive:true});
+
+  /* Mobile menu */
+  var mbt=document.getElementById('mbt'),mob=document.getElementById('mob'),mic=document.getElementById('mic'),mo=false;
+  mbt.addEventListener('click',function(){
+    mo=!mo;mob.classList.toggle('open',mo);
+    mic.className=mo?'fa-solid fa-xmark text-lg':'fa-solid fa-bars text-lg';
+    document.body.style.overflow=mo?'hidden':'';
+  });
+  mob.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){mo=false;mob.classList.remove('open');mic.className='fa-solid fa-bars text-lg';document.body.style.overflow='';});
+  });
+
+  /* Scroll reveal */
+  var ro=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');ro.unobserve(e.target);}});
+  },{threshold:.07,rootMargin:'0px 0px -18px 0px'});
+  document.querySelectorAll('.r,.rv,.proc-line').forEach(function(el){ro.observe(el);});
+
+  /* Counter */
+  var co=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting)return;
+      var el=e.target,raw=el.getAttribute('data-target'),isDec=el.getAttribute('data-dec'),t=parseFloat(raw),s=performance.now(),d=1800;
+      (function tick(n){
+        var p=Math.min((n-s)/d,1),v=t*(1-Math.pow(1-p,3));
+        el.textContent=isDec?v.toFixed(1):Math.floor(v);
+        if(p<1)requestAnimationFrame(tick);else el.textContent=isDec?t.toFixed(1):t;
+      })(s);
+      co.unobserve(el);
+    });
+  },{threshold:.5});
+  document.querySelectorAll('.ctr').forEach(function(c){co.observe(c);});
+
+  /* Contact form */
+  var cf=document.getElementById('cf'),cs=document.getElementById('csuc');
+  if(cf){
+    cf.addEventListener('submit',function(e){
+      e.preventDefault();
+      setTimeout(function(){cf.style.display='none';cs.classList.remove('hidden');},400);
+    });
+  }
+
+  /* FAQ accordion */
+  document.querySelectorAll('.faq-toggle').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var item=btn.parentElement;
+      var body=item.querySelector('.faqb');
+      var icon=item.querySelector('.faqi');
+      body.classList.toggle('o');
+      icon.classList.toggle('o');
+    });
+  });
+})();
+</script>
+
+<!-- Mobile sticky CTA bar -->
+<div class="lg:hidden fixed bottom-0 inset-x-0 z-50 grid grid-cols-2 bg-[#0a0a0a]/95 backdrop-blur border-t border-[#1f1f1f]" style="padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 20px rgba(0,0,0,.5);">
+  <a href="tel:042124763" class="flex items-center justify-center gap-2 py-4 text-white text-[13px] font-archivo uppercase tracking-[.1em] border-r border-[#1f1f1f]">
+    <i class="fa-solid fa-phone text-[#EC263C] text-[11px]"></i>Call Now
+  </a>
+  <a href="#contact" class="flex items-center justify-center gap-2 py-4 bg-[#EC263C] text-white text-[13px] font-archivo uppercase tracking-[.1em]">
+    Get Quote <i class="fa-solid fa-arrow-right text-[10px]"></i>
+  </a>
+</div>
+<style>@media(max-width:1023px){body{padding-bottom:64px;}}</style>
+
+</body>
+</html>

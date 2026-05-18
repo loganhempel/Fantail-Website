@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inside Fantail — The Anatomy of a Wellington Contractor</title>
+  <meta name="description" content="A scroll-driven look inside Wellington's leading HVAC, electrical & refrigeration contractor. 42 people, 22 vehicles, 55 projects since 2010.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{poppins:['Poppins','sans-serif'],mono:['JetBrains Mono','monospace'],jakarta:['Plus Jakarta Sans','sans-serif']},colors:{ink:'#06090d',ink2:'#0a0e14',line:'#1a2230',blue:'#7dd3fc',red:'#EC263C',accent:'#01B7F1'}}}}</script>
+  <style>
+    :root{
+      --ink:#06090d; --ink2:#0a0e14; --ink3:#10151c;
+      --line:#1a2230; --line2:#243047;
+      --blue:#7dd3fc; --blue-d:#0ea5e9;
+      --red:#EC263C;
+      --paper:#0c1118;
+      --text:#e6edf3; --muted:#7b8794; --dim:#4a5563;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      font-family:'Plus Jakarta Sans',sans-serif;
+      background:var(--ink);
+      color:var(--text);
+      overflow-x:hidden;
+      background-image:
+        radial-gradient(circle at 20% 10%,rgba(125,211,252,.04),transparent 40%),
+        radial-gradient(circle at 80% 80%,rgba(236,38,60,.04),transparent 40%);
+    }
+    h1,h2,h3{font-family:'Poppins',sans-serif;letter-spacing:-.01em;}
+    .mono{font-family:'JetBrains Mono',monospace;letter-spacing:0;}
+
+    /* Blueprint dot grid (always-on bg) */
+    body::before{
+      content:'';
+      position:fixed; inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(125,211,252,.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(125,211,252,.04) 1px,transparent 1px);
+      background-size:48px 48px;
+      mask-image:radial-gradient(ellipse 90% 70% at 50% 50%,black,transparent 90%);
+      z-index:0;
+    }
+    main{position:relative;z-index:1;}
+
+    /* Scroll-progress bar */
+    #prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--blue),var(--red));z-index:100;transition:width .08s linear;}
+
+    /* SVG line-draw helper */
+    .draw{stroke-dasharray:var(--len,1000);stroke-dashoffset:var(--len,1000);transition:stroke-dashoffset 1.2s cubic-bezier(.16,1,.3,1);}
+    .draw.in{stroke-dashoffset:0;}
+
+    /* Generic reveal */
+    .rev{opacity:0;transform:translateY(14px);transition:opacity .8s ease,transform .8s ease;}
+    .rev.in{opacity:1;transform:none;}
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}.d6{transition-delay:.6s}
+
+    /* Crosshair cursor inside schematic feel */
+    .schem{cursor:crosshair;}
+
+    /* Project node */
+    .node{transition:all .3s;}
+    .node:hover .node-dot{r:6;fill:var(--red);}
+    .node:hover .node-label{opacity:1;}
+
+    /* Sticky container */
+    .stage{position:relative;}
+    .stage-inner{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden;}
+
+    /* Pulse for active marker */
+    @keyframes pulse-blue{0%,100%{opacity:.4;r:18}50%{opacity:0;r:32}}
+    .pulse{animation:pulse-blue 2.4s ease-out infinite;transform-origin:center;}
+
+    /* Marquee for ticker */
+    @keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .mq{animation:mq 60s linear infinite;}
+
+    /* Annotation leader-line label style */
+    .anno{
+      font-family:'JetBrains Mono',monospace;
+      font-size:11px;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      color:var(--blue);
+    }
+    .anno-tick{color:var(--red);}
+    .anno-meta{color:var(--muted);font-size:10px;}
+
+    /* Subtle section divider */
+    .div-l{height:1px;background:linear-gradient(90deg,transparent,var(--line2) 30%,var(--line2) 70%,transparent);}
+
+    /* Hero schematic — rotating compass + line-draw on inner building */
+    @keyframes heroSpin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+    @keyframes heroSpinR { from{transform:rotate(0deg);} to{transform:rotate(-360deg);} }
+    @keyframes heroDraw { from{stroke-dashoffset:var(--len,200);} to{stroke-dashoffset:0;} }
+    .hero-draw { stroke-dasharray:var(--len,200); stroke-dashoffset:var(--len,200); animation: heroDraw 1.2s cubic-bezier(.16,1,.3,1) forwards; }
+
+    /* Constellation node ambient — the dot stays stable; only the halo breathes (subtle) */
+    @keyframes breathe{
+      0%,100%{opacity:.10;transform:scale(.9);}
+      50%{opacity:.30;transform:scale(1.35);}
+    }
+    .halo{transform-origin:center;transform-box:fill-box;animation:breathe var(--dur,6s) ease-in-out infinite;animation-delay:var(--del,0s);}
+
+    /* Coordinate corner ticks (decorative) */
+    .corner{position:absolute;width:18px;height:18px;}
+    .corner::before,.corner::after{content:'';position:absolute;background:var(--blue);opacity:.4;}
+    .corner::before{width:18px;height:1px;}
+    .corner::after{width:1px;height:18px;}
+    .c-tl{top:8px;left:8px;}
+    .c-tr{top:8px;right:8px;}.c-tr::before{right:0;}.c-tr::after{right:0;}
+    .c-bl{bottom:8px;left:8px;}.c-bl::before{bottom:0;}.c-bl::after{bottom:0;}
+    .c-br{bottom:8px;right:8px;}.c-br::before{bottom:0;right:0;}.c-br::after{bottom:0;right:0;}
+
+    /* Counter */
+    .ctr{font-variant-numeric:tabular-nums;}
+
+    @media (prefers-reduced-motion:reduce){
+      .draw{stroke-dashoffset:0!important;}
+      .rev{opacity:1!important;transform:none!important;}
+      .halo{animation:none!important;opacity:.18!important;transform:none!important;}
+      .pulse{animation:none!important;}
+    }
+  </style>
+  <link rel="canonical" href="https://fantailservices.co.nz/showcase.html">
+  <meta property="og:title" content="Inside Fantail — The Anatomy of a Wellington Contractor">
+  <meta property="og:description" content="A scroll-driven look inside Wellington's leading HVAC, electrical & refrigeration contractor. 42 people, 22 vehicles, 55 projects since 2010.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://imagedelivery.net/xaKlCos5cTg_1RWzIu_h-A/17ea4896-89bf-4efe-b603-f9c128bedc00/public">
+  <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HVACBusiness","name":"Fantail Services Ltd","image":"https://imagedelivery.net/xaKlCos5cTg_1RWzIu_h-A/17ea4896-89bf-4efe-b603-f9c128bedc00/public","@id":"https://fantailservices.co.nz","url":"https://fantailservices.co.nz","telephone":"+64-4-212-4763","email":"office@fantailservices.co.nz","address":{"@type":"PostalAddress","streetAddress":"5 Pretoria Street, Hutt Central","addressLocality":"Lower Hutt","postalCode":"5010","addressRegion":"Wellington","addressCountry":"NZ"},"geo":{"@type":"GeoCoordinates","latitude":-41.2073,"longitude":174.9075},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"07:30","closes":"17:00"}],"areaServed":[{"@type":"City","name":"Wellington"},{"@type":"City","name":"Lower Hutt"},{"@type":"City","name":"Upper Hutt"},{"@type":"City","name":"Porirua"},{"@type":"AdministrativeArea","name":"Kapiti Coast"}],"priceRange":"$","foundingDate":"2010","founder":{"@type":"Person","name":"Chris Spayes"},"numberOfEmployees":"42","sameAs":["https://www.facebook.com/fantailservices","https://www.linkedin.com/company/fantail-services-ltd"]}</script>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="fixed top-0 inset-x-0 z-50" style="background:rgba(6,9,13,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(26,34,48,.6);">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-[64px]">
+    <a href="index.html" class="flex items-center gap-3">
+      <img src="https://imagedelivery.net/xaKlCos5cTg_1RWzIu_h-A/17ea4896-89bf-4efe-b603-f9c128bedc00/public" alt="Fantail Services" class="h-10">
+      <span class="hidden md:inline mono text-[#7dd3fc] text-[10px] tracking-[.25em] uppercase">// inside</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-6">
+      <a href="index.html"       class="text-[#7b8794] hover:text-white text-[12px] mono uppercase tracking-[.2em] transition-colors">Home</a>
+      <a href="commercial.html"  class="text-[#7b8794] hover:text-white text-[12px] mono uppercase tracking-[.2em] transition-colors">Commercial</a>
+      <a href="residential.html" class="text-[#7b8794] hover:text-white text-[12px] mono uppercase tracking-[.2em] transition-colors">Residential</a>
+      <a href="industrial.html"  class="text-[#7b8794] hover:text-white text-[12px] mono uppercase tracking-[.2em] transition-colors">Industrial</a>
+      <a href="shop.html"        class="text-[#7b8794] hover:text-white text-[12px] mono uppercase tracking-[.2em] transition-colors">Shop</a>
+      <a href="showcase.html"    class="text-white text-[12px] mono uppercase tracking-[.2em]">Inside</a>
+    </nav>
+    <a href="#contact" class="text-white text-[11px] mono uppercase tracking-[.2em] border border-[#7dd3fc]/30 hover:border-[#7dd3fc] px-4 py-2 transition-colors">Talk to us →</a>
+  </div>
+</header>
+
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="relative min-h-screen flex items-center pt-[80px] pb-24 px-6 lg:px-10 overflow-hidden">
+
+  <div class="max-w-7xl mx-auto w-full relative">
+
+    <!-- Drawing meta strip — moved to top-left, no longer overlaps -->
+    <div class="hidden md:flex items-center gap-3 mono text-[10px] text-[#4a5563] uppercase tracking-[.2em] mb-8 rev">
+      <span class="text-[#EC263C]">●</span><span>DRAWING FS-001</span><span>·</span><span class="text-[#7dd3fc]">REV.A</span><span>·</span><span>2026.05</span><span>·</span><span>CHRIS SPAYES, M.DIR.</span>
+    </div>
+
+    <div class="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-center">
+
+      <!-- LEFT: title + copy + counters -->
+      <div>
+        <p class="mono text-[#7dd3fc] text-[11px] tracking-[.3em] uppercase mb-6 rev d1"><span class="text-[#EC263C]">[ §01 ]</span> &nbsp; The Anatomy of a Wellington Contractor</p>
+
+        <h1 class="font-poppins font-extrabold text-white leading-[.92] mb-8 rev d2" style="font-size:clamp(3rem,7.2vw,6.4rem);">
+          Inside<br>
+          <span class="text-[#7dd3fc]">Fantail.</span>
+        </h1>
+
+        <p class="text-[#a8b3c1] text-lg leading-relaxed font-jakarta max-w-xl mb-10 rev d3">
+          Forty-two people. Twenty-two vehicles. Fifty-five projects. One Wellington team that does HVAC, refrigeration, electrical, solar and data — under a single contract, in a single building.
+        </p>
+
+        <div class="grid grid-cols-3 gap-4 max-w-md mb-12 rev d4">
+          <div class="border-l-2 border-[#7dd3fc] pl-4">
+            <div class="text-white font-poppins text-4xl mb-1 ctr" data-target="42">0</div>
+            <div class="mono text-[10px] uppercase tracking-[.18em] text-[#7b8794]">People</div>
+          </div>
+          <div class="border-l-2 border-[#EC263C] pl-4">
+            <div class="text-white font-poppins text-4xl mb-1 ctr" data-target="22">0</div>
+            <div class="mono text-[10px] uppercase tracking-[.18em] text-[#7b8794]">Vehicles</div>
+          </div>
+          <div class="border-l-2 border-[#7dd3fc] pl-4">
+            <div class="text-white font-poppins text-4xl mb-1 ctr" data-target="55">0</div>
+            <div class="mono text-[10px] uppercase tracking-[.18em] text-[#7b8794]">Projects</div>
+          </div>
+        </div>
+
+        <!-- Scroll cue -- now on its own line, no overlap -->
+        <div class="flex items-center gap-3 mono text-[10px] uppercase tracking-[.3em] text-[#4a5563] rev d5">
+          <span class="w-10 h-px bg-[#1a2230]"></span><span>Scroll to begin</span><span class="text-[#7dd3fc] animate-pulse">↓</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: animated schematic preview — a continuously self-drawing technical drawing -->
+      <div class="hidden lg:block relative">
+        <div class="relative aspect-square max-w-[520px] ml-auto">
+          <!-- Decorative corner ticks -->
+          <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+
+          <svg viewBox="0 0 400 400" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="heroGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1a2230" stroke-width=".5"/>
+              </pattern>
+            </defs>
+            <!-- Grid backdrop -->
+            <rect x="20" y="20" width="360" height="360" fill="url(#heroGrid)" stroke="#1a2230" stroke-width=".8"/>
+
+            <!-- Rotating compass / drafting wheel — slow rotation -->
+            <g transform="translate(200,200)" style="animation:heroSpin 30s linear infinite;transform-origin:center;transform-box:fill-box;">
+              <circle r="140" fill="none" stroke="#1a2230" stroke-width="1"/>
+              <circle r="100" fill="none" stroke="#243047" stroke-width=".7" stroke-dasharray="2 4"/>
+              <circle r="60"  fill="none" stroke="#243047" stroke-width=".5"/>
+              <!-- Tick marks around outer ring -->
+              <g>
+                <line x1="0" y1="-140" x2="0" y2="-130" stroke="#7dd3fc" stroke-width="1.2"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(30)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(60)"/>
+                <line x1="0" y1="-140" x2="0" y2="-130" stroke="#7dd3fc" stroke-width="1.2" transform="rotate(90)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(120)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(150)"/>
+                <line x1="0" y1="-140" x2="0" y2="-130" stroke="#7dd3fc" stroke-width="1.2" transform="rotate(180)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(210)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(240)"/>
+                <line x1="0" y1="-140" x2="0" y2="-130" stroke="#7dd3fc" stroke-width="1.2" transform="rotate(270)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(300)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(330)"/>
+              </g>
+              <!-- Cardinal labels -->
+              <text y="-148" class="mono" fill="#EC263C" font-size="11" text-anchor="middle" font-weight="700">N</text>
+              <text x="148" y="4" class="mono" fill="#4a5563" font-size="9" text-anchor="middle">E</text>
+              <text y="156" class="mono" fill="#4a5563" font-size="9" text-anchor="middle">S</text>
+              <text x="-148" y="4" class="mono" fill="#4a5563" font-size="9" text-anchor="middle">W</text>
+            </g>
+
+            <!-- Counter-rotating inner ring -->
+            <g transform="translate(200,200)" style="animation:heroSpinR 22s linear infinite;transform-origin:center;transform-box:fill-box;">
+              <circle r="80" fill="none" stroke="#7dd3fc" stroke-width=".6" stroke-dasharray="3 3" opacity=".5"/>
+              <line x1="-80" y1="0" x2="80" y2="0" stroke="#7dd3fc" stroke-width=".5" opacity=".4"/>
+              <line x1="0" y1="-80" x2="0" y2="80" stroke="#7dd3fc" stroke-width=".5" opacity=".4"/>
+            </g>
+
+            <!-- Center building schematic — static, draws once -->
+            <g transform="translate(200,200)">
+              <!-- Building outline -->
+              <rect x="-40" y="-50" width="80" height="100" fill="#0a0e14" stroke="#7dd3fc" stroke-width="1.2" class="hero-draw" style="--len:360;"/>
+              <!-- Pitched roof -->
+              <path d="M -50 -50 L 0 -85 L 50 -50" fill="none" stroke="#7dd3fc" stroke-width="1.2" class="hero-draw" style="--len:140;animation-delay:.4s;"/>
+              <!-- Floor lines -->
+              <line x1="-40" y1="-15" x2="40" y2="-15" stroke="#243047" stroke-width=".7" class="hero-draw" style="--len:80;animation-delay:.7s;"/>
+              <line x1="-40" y1="20" x2="40" y2="20" stroke="#243047" stroke-width=".7" class="hero-draw" style="--len:80;animation-delay:.9s;"/>
+              <!-- HVAC unit on roof -->
+              <rect x="22" y="-65" width="14" height="8" fill="#0a0e14" stroke="#EC263C" stroke-width=".8" class="hero-draw" style="--len:44;animation-delay:1.2s;"/>
+              <!-- Solar panels on left pitch -->
+              <line x1="-44" y1="-54" x2="-12" y2="-72" stroke="#EC263C" stroke-width="1.5" class="hero-draw" style="--len:40;animation-delay:1.5s;"/>
+              <line x1="-40" y1="-50" x2="-8" y2="-68" stroke="#EC263C" stroke-width="1.5" class="hero-draw" style="--len:40;animation-delay:1.7s;"/>
+              <!-- Pulse markers -->
+              <circle cx="29" cy="-61" r="2.5" fill="#EC263C" class="pulse"/>
+              <circle cx="-26" cy="-63" r="2" fill="#EC263C" class="pulse" style="animation-delay:1s;"/>
+              <!-- Ground line -->
+              <line x1="-90" y1="50" x2="90" y2="50" stroke="#7dd3fc" stroke-width="1" class="hero-draw" style="--len:180;animation-delay:.2s;"/>
+              <text y="68" class="mono" fill="#4a5563" font-size="9" text-anchor="middle" letter-spacing="1.5">FANTAIL · TYPICAL JOB</text>
+            </g>
+
+            <!-- Animated data tick — scrolling text bottom -->
+            <g transform="translate(200, 360)">
+              <text class="mono" fill="#4a5563" font-size="9" text-anchor="middle" letter-spacing="2">
+                <tspan>SECTOR · COMMERCIAL · INDUSTRIAL · RESIDENTIAL</tspan>
+                <animate attributeName="opacity" values=".6;1;.6" dur="3s" repeatCount="indefinite"/>
+              </text>
+            </g>
+          </svg>
+
+          <!-- Floating data badges around the schematic -->
+          <div class="absolute top-4 -left-8 hidden xl:block bg-[#0a0e14] border border-[#1a2230] px-3 py-1.5 mono text-[10px]">
+            <span class="text-[#EC263C]">●</span> <span class="text-[#7b8794]">LIVE</span> &nbsp;<span class="text-[#7dd3fc]">22 vans deployed</span>
+          </div>
+          <div class="absolute -bottom-4 -right-8 hidden xl:block bg-[#0a0e14] border border-[#1a2230] px-3 py-1.5 mono text-[10px]">
+            <span class="text-[#22c55e]">●</span> <span class="text-[#7b8794]">UP</span> &nbsp;<span class="text-[#7dd3fc]">all systems</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════ STAGE 02: THE RESIDENTIAL HOME SCHEMATIC ═══════════════════ -->
+<section id="stage-res" class="stage" style="height:480vh;">
+  <div class="stage-inner schem">
+    <div class="max-w-7xl mx-auto w-full px-6 lg:px-10 relative">
+
+      <div class="absolute top-6 left-6 lg:left-10 mono text-[10px] uppercase tracking-[.25em] text-[#4a5563] flex items-center gap-3">
+        <span class="text-[#7dd3fc]">[ §02 ]</span><span>Residential Home.</span><span id="stage-res-pct" class="text-[#EC263C]">00%</span>
+      </div>
+      <div class="absolute top-6 right-6 lg:right-10 mono text-[10px] uppercase tracking-[.25em] text-[#4a5563]">DRAWING FS-RES-01 · TYPICAL HOME · 1:100</div>
+
+      <div class="grid lg:grid-cols-[1fr_400px] gap-8 items-center pt-16">
+
+        <div class="relative">
+          <svg id="house" viewBox="0 0 800 720" class="w-full max-w-[760px] mx-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="houseGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1a2230" stroke-width=".5"/>
+              </pattern>
+            </defs>
+
+            <rect x="40" y="40" width="720" height="640" fill="url(#houseGrid)" stroke="#1a2230" stroke-width="1"/>
+
+            <rect class="draw" id="res-frame" x="40" y="40" width="720" height="640" stroke="#7dd3fc" stroke-width="1" fill="none" style="--len:2720;"/>
+            <line class="draw" id="res-titleline" x1="40" y1="660" x2="760" y2="660" stroke="#1a2230" stroke-width="1" style="--len:720;"/>
+            <text x="56" y="678" class="mono" fill="#4a5563" font-size="10" letter-spacing="2">FANTAIL · RESIDENTIAL · TYPICAL HOME SECTION</text>
+            <text x="704" y="678" class="mono" fill="#4a5563" font-size="10" letter-spacing="2" text-anchor="end">2026</text>
+
+            <line class="draw" id="res-ground" x1="60" y1="600" x2="740" y2="600" stroke="#7dd3fc" stroke-width="1.2" style="--len:680;"/>
+            <text x="56" y="615" class="mono" fill="#4a5563" font-size="9" letter-spacing="1">GL ±0</text>
+
+            <path class="draw" id="res-walls" d="M 160 600 L 160 340 L 440 340 L 440 600" stroke="#e6edf3" stroke-width="1.5" style="--len:840;"/>
+            <path class="draw" id="res-roof" d="M 140 340 L 300 220 L 460 340" stroke="#e6edf3" stroke-width="1.5" style="--len:420;"/>
+
+            <path class="draw" id="res-garage" d="M 440 600 L 440 420 L 620 420 L 620 600" stroke="#e6edf3" stroke-width="1.3" style="--len:540;"/>
+            <line class="draw" id="res-garage-roof" x1="440" y1="420" x2="620" y2="420" stroke="#e6edf3" stroke-width="1.3" style="--len:180;"/>
+            <text x="530" y="520" class="mono anno-meta" fill="#4a5563" font-size="9" text-anchor="middle">GARAGE</text>
+
+            <line class="draw" id="res-div1" x1="280" y1="600" x2="280" y2="340" stroke="#243047" stroke-width="1" style="--len:260;"/>
+            <line class="draw" id="res-div2" x1="280" y1="500" x2="440" y2="500" stroke="#243047" stroke-width="1" style="--len:160;"/>
+
+            <text x="220" y="555" class="mono anno-meta" fill="#4a5563" font-size="9" text-anchor="middle">LOUNGE</text>
+            <text x="360" y="425" class="mono anno-meta" fill="#4a5563" font-size="9" text-anchor="middle">BEDROOMS</text>
+            <text x="360" y="555" class="mono anno-meta" fill="#4a5563" font-size="9" text-anchor="middle">LAUNDRY</text>
+
+            <g id="res-foundation" opacity="0">
+              <line x1="160" y1="600" x2="150" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="200" y1="600" x2="190" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="240" y1="600" x2="230" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="280" y1="600" x2="270" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="320" y1="600" x2="310" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="360" y1="600" x2="350" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="400" y1="600" x2="390" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="440" y1="600" x2="430" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="480" y1="600" x2="470" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="520" y1="600" x2="510" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="560" y1="600" x2="550" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="600" y1="600" x2="590" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+            </g>
+
+            <!-- 01 HEAT PUMP -->
+            <g id="res-hp" opacity="0">
+              <rect x="100" y="490" width="42" height="28" fill="#0a0e14" stroke="#7dd3fc" stroke-width="1.2"/>
+              <line x1="105" y1="496" x2="137" y2="496" stroke="#7dd3fc" stroke-width=".6"/>
+              <line x1="105" y1="502" x2="137" y2="502" stroke="#7dd3fc" stroke-width=".6"/>
+              <line x1="105" y1="508" x2="137" y2="508" stroke="#7dd3fc" stroke-width=".6"/>
+              <line x1="105" y1="514" x2="137" y2="514" stroke="#7dd3fc" stroke-width=".6"/>
+              <circle cx="121" cy="475" r="3" fill="none" stroke="#7dd3fc" stroke-width=".6"/>
+              <circle cx="121" cy="475" r="1.5" fill="#7dd3fc" class="pulse"/>
+              <path d="M 142 504 L 180 504 L 180 380 L 230 380" stroke="#EC263C" stroke-width=".7" stroke-dasharray="2 3"/>
+              <rect x="230" y="372" width="36" height="14" fill="#0a0e14" stroke="#7dd3fc" stroke-width="1"/>
+              <line x1="234" y1="378" x2="262" y2="378" stroke="#7dd3fc" stroke-width=".5"/>
+            </g>
+            <g id="res-anno-hp" opacity="0">
+              <line x1="121" y1="475" x2="80" y2="475" stroke="#7dd3fc" stroke-width=".7"/>
+              <line x1="80" y1="475" x2="80" y2="100" stroke="#7dd3fc" stroke-width=".7" stroke-dasharray="2 2"/>
+              <circle cx="80" cy="100" r="3" fill="#7dd3fc"/>
+              <text x="92" y="98" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5">[01]  HEAT PUMP</text>
+              <text x="92" y="112" class="mono anno-meta" font-size="9" fill="#7b8794">Mitsubishi · Daikin · Panasonic</text>
+            </g>
+
+            <!-- 02 HRU VENTILATION -->
+            <g id="res-hrv" opacity="0">
+              <rect x="280" y="205" width="40" height="18" fill="#0a0e14" stroke="#7dd3fc" stroke-width="1"/>
+              <line x1="285" y1="211" x2="315" y2="211" stroke="#7dd3fc" stroke-width=".5"/>
+              <line x1="285" y1="217" x2="315" y2="217" stroke="#7dd3fc" stroke-width=".5"/>
+              <path d="M 300 223 L 300 280 L 220 280 L 220 350" stroke="#7dd3fc" stroke-width=".7" stroke-dasharray="3 2"/>
+              <path d="M 300 280 L 360 280 L 360 350" stroke="#7dd3fc" stroke-width=".7" stroke-dasharray="3 2"/>
+              <circle cx="220" cy="350" r="3" fill="none" stroke="#7dd3fc" stroke-width=".7"/>
+              <circle cx="360" cy="350" r="3" fill="none" stroke="#7dd3fc" stroke-width=".7"/>
+            </g>
+            <g id="res-anno-hrv" opacity="0">
+              <line x1="320" y1="214" x2="720" y2="214" stroke="#7dd3fc" stroke-width=".7"/>
+              <text x="724" y="212" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5">[02]  HRU VENT</text>
+              <text x="724" y="226" class="mono anno-meta" font-size="9" fill="#7b8794">SmartVent · HRV · whole-home fresh air</text>
+            </g>
+
+            <!-- 03 ROOFTOP SOLAR -->
+            <g id="res-solar" opacity="0">
+              <line x1="160" y1="332" x2="290" y2="234" stroke="#EC263C" stroke-width="3"/>
+              <line x1="160" y1="332" x2="290" y2="234" stroke="#0c1118" stroke-width="3" stroke-dasharray="3 3"/>
+              <line x1="165" y1="338" x2="295" y2="240" stroke="#EC263C" stroke-width="2.5"/>
+              <line x1="165" y1="338" x2="295" y2="240" stroke="#0c1118" stroke-width="2.5" stroke-dasharray="3 3"/>
+              <circle cx="225" cy="280" r="3" fill="#EC263C"/>
+              <circle cx="225" cy="280" r="14" fill="#EC263C" opacity=".15" class="pulse"/>
+            </g>
+            <g id="res-anno-solar" opacity="0">
+              <line x1="225" y1="280" x2="225" y2="140" stroke="#7dd3fc" stroke-width=".7" stroke-dasharray="2 2"/>
+              <line x1="225" y1="140" x2="380" y2="140" stroke="#7dd3fc" stroke-width=".7"/>
+              <text x="384" y="138" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5">[03]  ROOFTOP SOLAR</text>
+              <text x="384" y="152" class="mono anno-meta" font-size="9" fill="#7b8794">5–10 kW · Sungrow / Fronius · battery-ready</text>
+            </g>
+
+            <!-- 04 HOT WATER HEAT PUMP -->
+            <g id="res-hwhp" opacity="0">
+              <rect x="345" y="530" width="32" height="48" fill="#0a0e14" stroke="#EC263C" stroke-width="1"/>
+              <line x1="349" y1="536" x2="373" y2="536" stroke="#EC263C" stroke-width=".5"/>
+              <line x1="349" y1="542" x2="373" y2="542" stroke="#EC263C" stroke-width=".5"/>
+              <circle cx="361" cy="560" r="4" fill="none" stroke="#EC263C" stroke-width=".6"/>
+              <circle cx="361" cy="560" r="2" fill="#EC263C"/>
+              <text x="361" y="595" class="mono" fill="#EC263C" font-size="9" text-anchor="middle">HWHP</text>
+            </g>
+            <g id="res-anno-hwhp" opacity="0">
+              <line x1="377" y1="555" x2="720" y2="555" stroke="#7dd3fc" stroke-width=".7"/>
+              <text x="724" y="553" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5">[04]  HOT WATER HP</text>
+              <text x="724" y="567" class="mono anno-meta" font-size="9" fill="#7b8794">Reclaim · Apricus · cut hot-water bill ~70%</text>
+            </g>
+
+            <!-- 05 EV CHARGER -->
+            <g id="res-ev" opacity="0">
+              <rect x="628" y="500" width="22" height="40" fill="#0a0e14" stroke="#EC263C" stroke-width="1"/>
+              <line x1="632" y1="506" x2="646" y2="506" stroke="#EC263C" stroke-width=".5"/>
+              <line x1="632" y1="512" x2="646" y2="512" stroke="#EC263C" stroke-width=".5"/>
+              <circle cx="639" cy="525" r="3" fill="none" stroke="#EC263C" stroke-width=".6"/>
+              <circle cx="639" cy="525" r="1.5" fill="#EC263C" class="pulse"/>
+              <path d="M 639 540 Q 660 565 690 555" stroke="#EC263C" stroke-width=".7" fill="none"/>
+            </g>
+            <g id="res-anno-ev" opacity="0">
+              <line x1="650" y1="520" x2="720" y2="520" stroke="#7dd3fc" stroke-width=".7"/>
+              <text x="724" y="490" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5">[05]  EV CHARGER</text>
+              <text x="724" y="504" class="mono anno-meta" font-size="9" fill="#7b8794">7 kW wall-mount · Tesla · EVNEX</text>
+            </g>
+
+            <!-- 06 SMART PANEL + connecting wiring -->
+            <g id="res-smart" opacity="0">
+              <rect x="290" y="555" width="18" height="32" fill="#0a0e14" stroke="#EC263C" stroke-width="1"/>
+              <line x1="293" y1="561" x2="305" y2="561" stroke="#EC263C" stroke-width=".5"/>
+              <line x1="293" y1="567" x2="305" y2="567" stroke="#EC263C" stroke-width=".5"/>
+              <line x1="293" y1="573" x2="305" y2="573" stroke="#EC263C" stroke-width=".5"/>
+              <line x1="293" y1="579" x2="305" y2="579" stroke="#EC263C" stroke-width=".5"/>
+              <path d="M 299 555 L 299 470 L 225 470 L 225 290" stroke="#EC263C" stroke-width=".5" stroke-dasharray="1 4" opacity=".6"/>
+              <path d="M 299 555 L 360 555 L 360 545" stroke="#EC263C" stroke-width=".5" stroke-dasharray="1 4" opacity=".6"/>
+              <path d="M 299 555 L 299 590 L 639 590 L 639 540" stroke="#EC263C" stroke-width=".5" stroke-dasharray="1 4" opacity=".6"/>
+            </g>
+            <g id="res-anno-smart" opacity="0">
+              <line x1="290" y1="571" x2="135" y2="571" stroke="#7dd3fc" stroke-width=".7"/>
+              <text x="125" y="569" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5" text-anchor="end">[06]  SMART PANEL</text>
+              <text x="125" y="583" class="mono anno-meta" font-size="9" fill="#7b8794" text-anchor="end">App-controlled · EV-aware · COC certified</text>
+            </g>
+
+          </svg>
+          <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+        </div>
+
+        <div class="hidden lg:block">
+          <div class="border border-[#1a2230] bg-[#0a0e14]/80 backdrop-blur-sm p-6 max-w-sm">
+            <div class="flex items-center justify-between mb-5 mono text-[10px] uppercase tracking-[.2em] text-[#4a5563]">
+              <span>HOMEOWNER JOURNEY</span>
+              <span class="text-[#7dd3fc]" id="stage-res-name">--/--</span>
+            </div>
+            <div id="stage-res-info" class="min-h-[280px]">
+              <p class="mono text-[10px] uppercase tracking-[.18em] text-[#EC263C] mb-3">// scroll to begin</p>
+              <h3 class="font-poppins text-2xl text-white mb-4 leading-tight">A Wellington home. Six upgrades, one team.</h3>
+              <p class="text-[#7b8794] text-sm leading-relaxed font-jakarta">Most homeowners come to us with one problem — a cold house, a steamy bathroom, a power bill that won't quit. Scroll to see the six upgrades we install, in the order a typical Wellington family actually adds them.</p>
+            </div>
+            <div class="div-l my-5"></div>
+            <div class="flex items-center justify-between mono text-[9px] uppercase tracking-[.2em] text-[#4a5563]">
+              <span>FANTAIL · RESIDENTIAL</span>
+              <span>SHEET 01 / 06</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════ STAGE 03: THE COMMERCIAL BUILDING SCHEMATIC ═══════════════════ -->
+<section id="stage-building" class="stage" style="height:520vh;">
+  <div class="stage-inner schem">
+    <div class="max-w-7xl mx-auto w-full px-6 lg:px-10 relative">
+
+      <!-- Section meta -->
+      <div class="absolute top-6 left-6 lg:left-10 mono text-[10px] uppercase tracking-[.25em] text-[#4a5563] flex items-center gap-3">
+        <span class="text-[#7dd3fc]">[ §03 ]</span><span>Commercial Building.</span><span id="stage1-pct" class="text-[#EC263C]">00%</span>
+      </div>
+      <div class="absolute top-6 right-6 lg:right-10 mono text-[10px] uppercase tracking-[.25em] text-[#4a5563]">SCALE 1:200 · MM</div>
+
+      <!-- Step navigation: prev / counter / next  (sticky-stage internal nav, lg+) -->
+      <div class="hidden lg:flex absolute right-6 lg:right-10 top-1/2 -translate-y-1/2 z-20 flex-col items-center gap-3 select-none">
+        <button id="cs-prev" type="button" aria-label="Previous step" class="w-11 h-11 border border-[#7dd3fc]/30 hover:border-[#7dd3fc] text-[#7dd3fc] hover:bg-[#7dd3fc]/10 transition-colors flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-chevron-up text-sm"></i>
+        </button>
+        <div class="text-center mono">
+          <div id="cs-counter" class="text-[#7dd3fc] text-[13px] font-bold tracking-[.15em]">01/07</div>
+          <div class="text-[#4a5563] text-[8px] uppercase tracking-[.2em] mt-1">Step</div>
+        </div>
+        <button id="cs-next" type="button" aria-label="Next step" class="w-11 h-11 border border-[#7dd3fc]/30 hover:border-[#7dd3fc] text-[#7dd3fc] hover:bg-[#7dd3fc]/10 transition-colors flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-chevron-down text-sm"></i>
+        </button>
+        <!-- Step dots (visual progress) -->
+        <div class="flex flex-col gap-1.5 mt-3" id="cs-dots"></div>
+      </div>
+
+      <!-- Mobile prev/next bar (md and below) — fixed at bottom of viewport while stage is in view -->
+      <div class="lg:hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-[#0a0e14]/95 backdrop-blur border border-[#1a2230] px-3 py-2">
+        <button id="cs-prev-m" type="button" aria-label="Previous step" class="w-9 h-9 border border-[#7dd3fc]/30 hover:border-[#7dd3fc] text-[#7dd3fc] flex items-center justify-center">
+          <i class="fa-solid fa-chevron-left text-xs"></i>
+        </button>
+        <span id="cs-counter-m" class="mono text-[#7dd3fc] text-[11px] font-bold tracking-[.15em] px-2">01/07</span>
+        <button id="cs-next-m" type="button" aria-label="Next step" class="w-9 h-9 border border-[#7dd3fc]/30 hover:border-[#7dd3fc] text-[#7dd3fc] flex items-center justify-center">
+          <i class="fa-solid fa-chevron-right text-xs"></i>
+        </button>
+      </div>
+
+      <div class="grid lg:grid-cols-[1fr_400px] gap-8 items-center pt-16">
+
+        <!-- ─── SVG building cross-section ─── -->
+        <div class="relative">
+          <svg id="bldg" viewBox="0 0 800 720" class="w-full max-w-[760px] mx-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+            <!-- Background grid (always visible inside the schematic frame) -->
+            <defs>
+              <pattern id="schemGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1a2230" stroke-width=".5"/>
+              </pattern>
+            </defs>
+            <rect x="40" y="40" width="720" height="640" fill="url(#schemGrid)" stroke="#1a2230" stroke-width="1"/>
+
+            <!-- Drawing frame border (line draws) -->
+            <rect class="draw" id="frame" x="40" y="40" width="720" height="640" stroke="#7dd3fc" stroke-width="1" fill="none" style="--len:2720;"/>
+            <!-- Frame title block -->
+            <line class="draw" x1="40" y1="660" x2="760" y2="660" stroke="#1a2230" stroke-width="1" style="--len:720;"/>
+            <text x="56" y="678" class="mono" fill="#4a5563" font-size="10" letter-spacing="2">FANTAIL · COMMERCIAL · TYPICAL SECTION A-A</text>
+            <text x="704" y="678" class="mono" fill="#4a5563" font-size="10" letter-spacing="2" text-anchor="end">2026</text>
+
+            <!-- ── GROUND LINE ── -->
+            <line class="draw" id="ground" x1="60" y1="600" x2="740" y2="600" stroke="#7dd3fc" stroke-width="1.2" style="--len:680;"/>
+            <text x="56" y="615" class="mono" fill="#4a5563" font-size="9" letter-spacing="1">GL ±0</text>
+
+            <!-- ── BUILDING OUTLINE ── -->
+            <path class="draw" id="walls" d="M 200 600 L 200 200 L 600 200 L 600 600" stroke="#e6edf3" stroke-width="1.5" style="--len:1200;"/>
+            <!-- Roof pitch -->
+            <path class="draw" id="roof" d="M 180 200 L 400 110 L 620 200" stroke="#e6edf3" stroke-width="1.5" style="--len:560;"/>
+
+            <!-- Floor slabs -->
+            <line class="draw" id="floor1" x1="200" y1="500" x2="600" y2="500" stroke="#243047" stroke-width="1" style="--len:400;"/>
+            <line class="draw" id="floor2" x1="200" y1="400" x2="600" y2="400" stroke="#243047" stroke-width="1" style="--len:400;"/>
+            <line class="draw" id="floor3" x1="200" y1="300" x2="600" y2="300" stroke="#243047" stroke-width="1" style="--len:400;"/>
+
+            <!-- Floor labels -->
+            <text x="610" y="555" class="mono anno-meta" fill="#4a5563" font-size="9">L1 · GROUND</text>
+            <text x="610" y="455" class="mono anno-meta" fill="#4a5563" font-size="9">L2</text>
+            <text x="610" y="355" class="mono anno-meta" fill="#4a5563" font-size="9">L3</text>
+            <text x="610" y="255" class="mono anno-meta" fill="#4a5563" font-size="9">L4 · ROOF</text>
+
+            <!-- Foundation hatching -->
+            <g id="foundation" opacity="0">
+              <line x1="200" y1="600" x2="190" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="240" y1="600" x2="230" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="280" y1="600" x2="270" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="320" y1="600" x2="310" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="360" y1="600" x2="350" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="400" y1="600" x2="390" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="440" y1="600" x2="430" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="480" y1="600" x2="470" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="520" y1="600" x2="510" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="560" y1="600" x2="550" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+              <line x1="600" y1="600" x2="590" y2="615" stroke="#7dd3fc" stroke-width=".7" opacity=".5"/>
+            </g>
+
+            <!-- ── 01 SOLAR PV (rooftop, both sides of pitch) ── -->
+            <g id="el-solar" opacity="0">
+              <!-- Left pitch panels -->
+              <line x1="220" y1="190" x2="380" y2="120" stroke="#EC263C" stroke-width="3"/>
+              <line x1="220" y1="190" x2="380" y2="120" stroke="#0c1118" stroke-width="3" stroke-dasharray="3 3"/>
+              <line x1="225" y1="195" x2="385" y2="125" stroke="#EC263C" stroke-width="2.5"/>
+              <line x1="225" y1="195" x2="385" y2="125" stroke="#0c1118" stroke-width="2.5" stroke-dasharray="3 3"/>
+              <!-- Right pitch panels -->
+              <line x1="420" y1="120" x2="580" y2="190" stroke="#EC263C" stroke-width="3"/>
+              <line x1="420" y1="120" x2="580" y2="190" stroke="#0c1118" stroke-width="3" stroke-dasharray="3 3"/>
+              <line x1="425" y1="125" x2="585" y2="195" stroke="#EC263C" stroke-width="2.5"/>
+              <line x1="425" y1="125" x2="585" y2="195" stroke="#0c1118" stroke-width="2.5" stroke-dasharray="3 3"/>
+              <!-- Marker -->
+              <circle cx="400" cy="115" r="4" fill="#EC263C"/>
+              <circle cx="400" cy="115" r="18" fill="#EC263C" opacity=".15" class="pulse"/>
+            </g>
+            <!-- Annotation 01 -->
+            <g id="anno-solar" opacity="0">
+              <line x1="400" y1="115" x2="400" y2="80" stroke="#7dd3fc" stroke-width=".7" stroke-dasharray="2 2"/>
+              <line x1="400" y1="80" x2="80" y2="80" stroke="#7dd3fc" stroke-width=".7"/>
+              <circle cx="80" cy="80" r="3" fill="#7dd3fc"/>
+              <text x="60" y="68" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5">[07]  ROOFTOP PV</text>
+              <text x="60" y="92" class="mono anno-meta" font-size="9" fill="#7b8794">Commercial 30 kW+ · Sungrow / Fronius</text>
+            </g>
+
+            <!-- ── 02 HVAC outdoor unit on the roof gutter ── -->
+            <g id="el-hvac-od" opacity="0">
+              <rect x="640" y="170" width="50" height="30" fill="#0a0e14" stroke="#7dd3fc" stroke-width="1.2"/>
+              <line x1="645" y1="178" x2="685" y2="178" stroke="#7dd3fc" stroke-width=".8"/>
+              <line x1="645" y1="184" x2="685" y2="184" stroke="#7dd3fc" stroke-width=".8"/>
+              <line x1="645" y1="190" x2="685" y2="190" stroke="#7dd3fc" stroke-width=".8"/>
+              <circle cx="665" cy="155" r="4" fill="none" stroke="#7dd3fc" stroke-width=".8"/>
+              <circle cx="665" cy="155" r="2" fill="#7dd3fc" class="pulse"/>
+            </g>
+            <g id="anno-hvac" opacity="0">
+              <line x1="690" y1="185" x2="730" y2="185" stroke="#7dd3fc" stroke-width=".7"/>
+              <text x="734" y="183" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5">[03]  HVAC</text>
+              <text x="734" y="198" class="mono anno-meta" font-size="9" fill="#7b8794">VRF · Daikin · Mitsubishi</text>
+            </g>
+
+            <!-- ── 03 VRF indoor units, ducted floor-to-floor ── -->
+            <g id="el-vrf" opacity="0">
+              <!-- L4 indoor cassette -->
+              <rect x="280" y="225" width="40" height="14" fill="#0a0e14" stroke="#7dd3fc" stroke-width="1"/>
+              <!-- L3 indoor -->
+              <rect x="430" y="325" width="40" height="14" fill="#0a0e14" stroke="#7dd3fc" stroke-width="1"/>
+              <!-- L2 indoor -->
+              <rect x="280" y="425" width="40" height="14" fill="#0a0e14" stroke="#7dd3fc" stroke-width="1"/>
+              <!-- L1 indoor -->
+              <rect x="430" y="525" width="40" height="14" fill="#0a0e14" stroke="#7dd3fc" stroke-width="1"/>
+              <!-- Refrigerant pipework run (vertical riser to roof unit) -->
+              <path d="M 580 540 L 580 240 L 645 240 L 645 200" stroke="#EC263C" stroke-width="1" stroke-dasharray="2 3"/>
+              <!-- Branches -->
+              <path d="M 580 240 L 320 232" stroke="#EC263C" stroke-width=".7" stroke-dasharray="2 3"/>
+              <path d="M 580 340 L 470 332" stroke="#EC263C" stroke-width=".7" stroke-dasharray="2 3"/>
+              <path d="M 580 440 L 320 432" stroke="#EC263C" stroke-width=".7" stroke-dasharray="2 3"/>
+              <path d="M 580 540 L 470 532" stroke="#EC263C" stroke-width=".7" stroke-dasharray="2 3"/>
+            </g>
+            <g id="anno-vrf" opacity="0">
+              <line x1="280" y1="232" x2="80" y2="232" stroke="#7dd3fc" stroke-width=".7"/>
+              <circle cx="80" cy="232" r="3" fill="#7dd3fc"/>
+              <text x="60" y="220" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5">[04]  VRF + HRV</text>
+              <text x="60" y="244" class="mono anno-meta" font-size="9" fill="#7b8794">Heat recovery · ducted indoor units</text>
+            </g>
+
+            <!-- ── 04 SERVER / DATA ROOM cooling on L2 ── -->
+            <g id="el-server" opacity="0">
+              <!-- Server rack -->
+              <rect x="225" y="450" width="22" height="40" fill="#0a0e14" stroke="#7dd3fc" stroke-width="1"/>
+              <line x1="227" y1="455" x2="245" y2="455" stroke="#7dd3fc" stroke-width=".5"/>
+              <line x1="227" y1="460" x2="245" y2="460" stroke="#7dd3fc" stroke-width=".5"/>
+              <line x1="227" y1="465" x2="245" y2="465" stroke="#7dd3fc" stroke-width=".5"/>
+              <line x1="227" y1="470" x2="245" y2="470" stroke="#7dd3fc" stroke-width=".5"/>
+              <line x1="227" y1="475" x2="245" y2="475" stroke="#7dd3fc" stroke-width=".5"/>
+              <!-- Cool flow arrow -->
+              <path d="M 270 470 L 255 470" stroke="#7dd3fc" stroke-width=".8" marker-end="url(#arr)"/>
+              <text x="275" y="473" class="mono" fill="#7dd3fc" font-size="9">CRAC</text>
+            </g>
+            <g id="anno-server" opacity="0">
+              <line x1="225" y1="470" x2="80" y2="470" stroke="#7dd3fc" stroke-width=".7"/>
+              <circle cx="80" cy="470" r="3" fill="#7dd3fc"/>
+              <text x="60" y="458" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5">[06]  SERVER · UPS</text>
+              <text x="60" y="482" class="mono anno-meta" font-size="9" fill="#7b8794">24/7 critical climate</text>
+            </g>
+
+            <!-- ── 05 REFRIGERATION cool-room L1 ── -->
+            <g id="el-refrig" opacity="0">
+              <rect x="450" y="540" width="100" height="55" fill="none" stroke="#7dd3fc" stroke-width="1.2" stroke-dasharray="4 4"/>
+              <text x="500" y="572" class="mono" fill="#7dd3fc" font-size="9" text-anchor="middle">COOL ROOM</text>
+              <text x="500" y="585" class="mono" fill="#EC263C" font-size="9" text-anchor="middle">+2°C</text>
+              <!-- Compressor unit outside -->
+              <rect x="335" y="555" width="30" height="20" fill="#0a0e14" stroke="#EC263C" stroke-width="1"/>
+              <circle cx="350" cy="565" r="5" fill="none" stroke="#EC263C" stroke-width=".7"/>
+              <line x1="365" y1="565" x2="450" y2="565" stroke="#EC263C" stroke-width=".7" stroke-dasharray="2 3"/>
+            </g>
+            <g id="anno-refrig" opacity="0">
+              <line x1="500" y1="595" x2="500" y2="640" stroke="#7dd3fc" stroke-width=".7"/>
+              <line x1="500" y1="640" x2="730" y2="640" stroke="#7dd3fc" stroke-width=".7"/>
+              <text x="724" y="638" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5" text-anchor="end">[05]  REFRIGERATION</text>
+              <text x="724" y="652" class="mono anno-meta" font-size="9" fill="#7b8794" text-anchor="end">Cool rooms · walk-ins · plant</text>
+            </g>
+
+            <!-- ── 06 ELECTRICAL switchboard, basement ── -->
+            <g id="el-elec" opacity="0">
+              <rect x="240" y="555" width="20" height="40" fill="#0a0e14" stroke="#EC263C" stroke-width="1"/>
+              <line x1="244" y1="562" x2="256" y2="562" stroke="#EC263C" stroke-width=".5"/>
+              <line x1="244" y1="568" x2="256" y2="568" stroke="#EC263C" stroke-width=".5"/>
+              <line x1="244" y1="574" x2="256" y2="574" stroke="#EC263C" stroke-width=".5"/>
+              <line x1="244" y1="580" x2="256" y2="580" stroke="#EC263C" stroke-width=".5"/>
+              <line x1="244" y1="586" x2="256" y2="586" stroke="#EC263C" stroke-width=".5"/>
+              <!-- Riser cable to roof PV -->
+              <path d="M 250 555 L 250 215 L 405 130" stroke="#EC263C" stroke-width=".5" stroke-dasharray="1 4" opacity=".7"/>
+            </g>
+            <g id="anno-elec" opacity="0">
+              <line x1="260" y1="575" x2="380" y2="575" stroke="#7dd3fc" stroke-width=".7"/>
+              <line x1="380" y1="575" x2="380" y2="660" stroke="#7dd3fc" stroke-width=".7"/>
+              <text x="380" y="675" class="mono" fill="#7dd3fc" font-size="10" letter-spacing="1.5" text-anchor="middle">[02]  ELECTRICAL · COC</text>
+            </g>
+
+            <!-- Arrow marker def -->
+            <defs>
+              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#7dd3fc"/>
+              </marker>
+            </defs>
+
+          </svg>
+
+          <!-- Schematic frame corner ticks -->
+          <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+        </div>
+
+        <!-- ─── Side panel: real-time stage info ─── -->
+        <div class="hidden lg:block">
+          <div class="border border-[#1a2230] bg-[#0a0e14]/80 backdrop-blur-sm p-6 max-w-sm">
+            <div class="flex items-center justify-between mb-5 mono text-[10px] uppercase tracking-[.2em] text-[#4a5563]">
+              <span>STAGE INFO</span>
+              <span class="text-[#7dd3fc]" id="stage1-name">--/--</span>
+            </div>
+            <div id="stage1-info" class="min-h-[280px]">
+              <p class="mono text-[10px] uppercase tracking-[.18em] text-[#EC263C] mb-3">// scroll to begin</p>
+              <h3 class="font-poppins text-2xl text-white mb-4 leading-tight">A typical Wellington commercial job.</h3>
+              <p class="text-[#7b8794] text-sm leading-relaxed font-jakarta">A 4-storey office or apartment building — the kind of project Fantail delivers as a full M&amp;E package. Scroll to watch each system slot into place, in the order we install them.</p>
+            </div>
+            <div class="div-l my-5"></div>
+            <div class="flex items-center justify-between mono text-[9px] uppercase tracking-[.2em] text-[#4a5563]">
+              <span>FANTAIL · M&amp;E PACKAGE</span>
+              <span>SHEET 02 / 06</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════ STAGE 02: THE FLEET + COVERAGE ═══════════════════ -->
+<section id="stage-fleet" class="py-32 px-6 lg:px-10 relative">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="flex items-center justify-between mb-12">
+      <p class="mono text-[10px] uppercase tracking-[.25em] text-[#4a5563]"><span class="text-[#7dd3fc]">[ §04 ]</span> &nbsp; The Fleet.</p>
+      <p class="mono text-[10px] uppercase tracking-[.25em] text-[#4a5563]">22 ASSETS · GREATER WELLINGTON</p>
+    </div>
+
+    <div class="grid lg:grid-cols-[420px_1fr] gap-16 items-center">
+
+      <!-- Left: copy -->
+      <div>
+        <h2 class="font-poppins font-extrabold text-white text-5xl md:text-6xl leading-[.95] mb-8 rev">22 vans.<br><span class="text-[#7dd3fc]">One radius.</span></h2>
+        <p class="text-[#7b8794] leading-relaxed font-jakarta text-lg mb-8 rev d1">Twenty-two service vehicles deployed daily across Greater Wellington — Kāpiti to Wairarapa. Most callouts are on-site within the hour.</p>
+        <ul class="space-y-3 mono text-[12px] uppercase tracking-[.12em] rev d2">
+          <li class="flex items-center justify-between border-b border-[#1a2230] pb-3"><span class="text-[#7b8794]">// Lower Hutt &middot; HQ</span><span class="text-[#EC263C]">60+ jobs</span></li>
+          <li class="flex items-center justify-between border-b border-[#1a2230] pb-3"><span class="text-[#7b8794]">// Wellington CBD</span><span class="text-white">45+ jobs</span></li>
+          <li class="flex items-center justify-between border-b border-[#1a2230] pb-3"><span class="text-[#7b8794]">// Johnsonville</span><span class="text-white">35+ jobs</span></li>
+          <li class="flex items-center justify-between border-b border-[#1a2230] pb-3"><span class="text-[#7b8794]">// Upper Hutt</span><span class="text-white">30+ jobs</span></li>
+          <li class="flex items-center justify-between border-b border-[#1a2230] pb-3"><span class="text-[#7b8794]">// Porirua</span><span class="text-white">25+ jobs</span></li>
+          <li class="flex items-center justify-between"><span class="text-[#7b8794]">// Kāpiti Coast</span><span class="text-white">20+ jobs</span></li>
+        </ul>
+      </div>
+
+      <!-- Right: 22-van grid -->
+      <div class="relative border border-[#1a2230] bg-[#0a0e14]/50 p-8" id="fleet-grid">
+        <div class="absolute top-3 left-3 mono text-[9px] uppercase tracking-[.2em] text-[#4a5563]">FLEET-A · LIVE</div>
+        <div class="absolute top-3 right-3 mono text-[9px] uppercase tracking-[.2em]"><span class="text-[#22c55e]">●</span> <span class="text-[#7b8794]">all in service</span></div>
+
+        <svg viewBox="0 0 480 320" class="w-full mt-6" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 22 vans, arranged 6 per row × 4 rows (with 2 in last row) -->
+          <g id="vans"></g>
+        </svg>
+
+        <div class="mt-4 flex items-center justify-between mono text-[9px] uppercase tracking-[.2em] text-[#4a5563]">
+          <span>22 / 22 IN SERVICE</span>
+          <span>RESPONSE 24/7</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════ STAGE 03: THE WORK — sector-grouped project showcase ═══════════════════ -->
+<section id="stage-projects" class="py-32 px-6 lg:px-10 relative border-t border-[#1a2230]">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="flex items-center justify-between mb-12">
+      <p class="mono text-[10px] uppercase tracking-[.25em] text-[#4a5563]"><span class="text-[#7dd3fc]">[ §05 ]</span> &nbsp; The Work.</p>
+      <p class="mono text-[10px] uppercase tracking-[.25em] text-[#4a5563]">55 COMPLETED · 5 SECTORS · 1 TEAM</p>
+    </div>
+
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2 class="font-poppins font-extrabold text-white text-5xl md:text-6xl leading-[.95] mb-6 rev">Fifty-five jobs.<br><span class="text-[#7dd3fc]">Built across Wellington.</span></h2>
+      <p class="text-[#a8b3c1] leading-relaxed font-jakarta text-lg rev d1">Every project below is real — pulled from fantailservices.co.nz. Apartments to abattoirs, schools to supermarkets. Browse by sector.</p>
+    </div>
+
+    <!-- SECTOR CARDS GRID — clean, readable, no overlaps -->
+    <div id="sector-grid" class="grid lg:grid-cols-2 gap-5"></div>
+
+    <p class="mt-8 mono text-[10px] uppercase tracking-[.2em] text-[#4a5563] text-center">// every project verified against fantailservices.co.nz/commercial/our-projects/</p>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════ STAGE 04: THE PROCESS FLOWCHART ═══════════════════ -->
+<section id="stage-process" class="py-32 px-6 lg:px-10 relative border-t border-[#1a2230]">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="flex items-center justify-between mb-12">
+      <p class="mono text-[10px] uppercase tracking-[.25em] text-[#4a5563]"><span class="text-[#7dd3fc]">[ §06 ]</span> &nbsp; The Process.</p>
+      <p class="mono text-[10px] uppercase tracking-[.25em] text-[#4a5563]">BRIEF → COMMISSION → CARE</p>
+    </div>
+
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2 class="font-poppins font-extrabold text-white text-5xl md:text-6xl leading-[.95] mb-6 rev">A flow we draw<br><span class="text-[#7dd3fc]">on every job.</span></h2>
+    </div>
+
+    <!-- Flowchart SVG -->
+    <div class="relative border border-[#1a2230] bg-[#0a0e14]/40 p-4 md:p-10">
+      <div class="absolute top-3 left-3 mono text-[9px] uppercase tracking-[.2em] text-[#4a5563]">FLOW-01 · DELIVERY</div>
+
+      <svg viewBox="0 0 1100 360" class="w-full mt-4" fill="none" xmlns="http://www.w3.org/2000/svg" id="flow-svg">
+        <!-- Nodes: 5 boxes connected by arrows -->
+        <g id="flow-nodes">
+          <!-- Node 1: Brief -->
+          <g class="flow-node" data-step="0">
+            <rect x="20" y="120" width="170" height="120" fill="none" stroke="#7dd3fc" stroke-width="1.2" class="draw" style="--len:580;"/>
+            <text x="35" y="148" class="mono" fill="#EC263C" font-size="10" letter-spacing="2">[01]</text>
+            <text x="35" y="178" font-family="Poppins" fill="#fff" font-size="20" font-weight="700">Brief</text>
+            <text x="35" y="205" class="mono" fill="#7b8794" font-size="10">// what do you need</text>
+            <text x="35" y="222" class="mono" fill="#7b8794" font-size="10">// budget · scope · time</text>
+          </g>
+          <!-- Arrow 1 -->
+          <line x1="195" y1="180" x2="240" y2="180" stroke="#7dd3fc" stroke-width="1" class="draw" style="--len:50;" marker-end="url(#flowArr)"/>
+
+          <!-- Node 2: Design -->
+          <g class="flow-node" data-step="1">
+            <rect x="245" y="120" width="170" height="120" fill="none" stroke="#7dd3fc" stroke-width="1.2" class="draw" style="--len:580;"/>
+            <text x="260" y="148" class="mono" fill="#EC263C" font-size="10" letter-spacing="2">[02]</text>
+            <text x="260" y="178" font-family="Poppins" fill="#fff" font-size="20" font-weight="700">Design</text>
+            <text x="260" y="205" class="mono" fill="#7b8794" font-size="10">// in-house engineers</text>
+            <text x="260" y="222" class="mono" fill="#7b8794" font-size="10">// PS1 documentation</text>
+          </g>
+          <line x1="420" y1="180" x2="465" y2="180" stroke="#7dd3fc" stroke-width="1" class="draw" style="--len:50;" marker-end="url(#flowArr)"/>
+
+          <!-- Node 3: Procure -->
+          <g class="flow-node" data-step="2">
+            <rect x="470" y="120" width="170" height="120" fill="none" stroke="#7dd3fc" stroke-width="1.2" class="draw" style="--len:580;"/>
+            <text x="485" y="148" class="mono" fill="#EC263C" font-size="10" letter-spacing="2">[03]</text>
+            <text x="485" y="178" font-family="Poppins" fill="#fff" font-size="20" font-weight="700">Procure</text>
+            <text x="485" y="205" class="mono" fill="#7b8794" font-size="10">// Daikin · Mitsubishi</text>
+            <text x="485" y="222" class="mono" fill="#7b8794" font-size="10">// Hitachi · Temperzone</text>
+          </g>
+          <line x1="645" y1="180" x2="690" y2="180" stroke="#7dd3fc" stroke-width="1" class="draw" style="--len:50;" marker-end="url(#flowArr)"/>
+
+          <!-- Node 4: Install -->
+          <g class="flow-node" data-step="3">
+            <rect x="695" y="120" width="170" height="120" fill="none" stroke="#EC263C" stroke-width="1.4" class="draw" style="--len:580;"/>
+            <text x="710" y="148" class="mono" fill="#EC263C" font-size="10" letter-spacing="2">[04]</text>
+            <text x="710" y="178" font-family="Poppins" fill="#fff" font-size="20" font-weight="700">Install</text>
+            <text x="710" y="205" class="mono" fill="#7b8794" font-size="10">// 42 in-house people</text>
+            <text x="710" y="222" class="mono" fill="#7b8794" font-size="10">// PS3 commissioning</text>
+          </g>
+          <line x1="870" y1="180" x2="915" y2="180" stroke="#7dd3fc" stroke-width="1" class="draw" style="--len:50;" marker-end="url(#flowArr)"/>
+
+          <!-- Node 5: Care -->
+          <g class="flow-node" data-step="4">
+            <rect x="920" y="120" width="170" height="120" fill="none" stroke="#7dd3fc" stroke-width="1.2" class="draw" style="--len:580;"/>
+            <text x="935" y="148" class="mono" fill="#EC263C" font-size="10" letter-spacing="2">[05]</text>
+            <text x="935" y="178" font-family="Poppins" fill="#fff" font-size="20" font-weight="700">Care</text>
+            <text x="935" y="205" class="mono" fill="#7b8794" font-size="10">// PPM + 24/7 callout</text>
+            <text x="935" y="222" class="mono" fill="#7b8794" font-size="10">// BWOF managed</text>
+          </g>
+        </g>
+
+        <!-- Loop-back arrow Care → Brief showing relationship continues -->
+        <path d="M 1005 240 Q 1005 320 555 320 Q 105 320 105 240" stroke="#EC263C" stroke-width=".7" stroke-dasharray="3 4" class="draw" style="--len:1700;" marker-end="url(#flowArrR)"/>
+        <text x="555" y="345" class="mono" fill="#EC263C" font-size="9" text-anchor="middle" letter-spacing="2">// THE LOOP — WE STAY ON YOUR ASSETS FOR LIFE</text>
+
+        <defs>
+          <marker id="flowArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#7dd3fc"/>
+          </marker>
+          <marker id="flowArrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#EC263C"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════ STAGE 05: BRAND PARTNERS ═══════════════════ -->
+<section class="py-24 px-6 lg:px-10 relative border-t border-[#1a2230]">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center justify-between mb-10">
+      <p class="mono text-[10px] uppercase tracking-[.25em] text-[#4a5563]"><span class="text-[#7dd3fc]">[ §07 ]</span> &nbsp; The Catalogue.</p>
+      <p class="mono text-[10px] uppercase tracking-[.25em] text-[#4a5563]">SUPPLIED · CERTIFIED · INSTALLED</p>
+    </div>
+
+    <div class="overflow-hidden border-y border-[#1a2230] py-8">
+      <div class="flex whitespace-nowrap mq mono text-[18px] md:text-[26px] uppercase tracking-[.18em] text-[#4a5563]">
+        <span class="mx-8">Daikin</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-white">Mitsubishi</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8">Hitachi</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-[#7dd3fc]">Temperzone</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8">Gree</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-white">Sungrow</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8">Fronius</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-[#EC263C]">Tesla</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8">EVNEX</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-white">Bitzer</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8">Frick</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-[#7dd3fc]">Mycom</span><span class="text-[#1a2230]">·</span>
+        <!-- Repeat for marquee loop -->
+        <span class="mx-8">Daikin</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-white">Mitsubishi</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8">Hitachi</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-[#7dd3fc]">Temperzone</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8">Gree</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-white">Sungrow</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8">Fronius</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-[#EC263C]">Tesla</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8">EVNEX</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-white">Bitzer</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8">Frick</span><span class="text-[#1a2230]">·</span>
+        <span class="mx-8 text-[#7dd3fc]">Mycom</span><span class="text-[#1a2230]">·</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════ CLOSING ═══════════════════ -->
+<section id="contact" class="relative py-32 px-6 lg:px-10 border-t border-[#1a2230]">
+  <div class="max-w-5xl mx-auto text-center relative">
+
+    <p class="mono text-[10px] uppercase tracking-[.3em] text-[#7dd3fc] mb-8 rev"><span class="text-[#EC263C]">[ END OF DRAWING ]</span> &nbsp; FANTAIL · 2010 → 2026</p>
+
+    <h2 class="font-poppins font-extrabold text-white leading-[.95] mb-10 rev d1" style="font-size:clamp(3rem,8vw,7rem);">
+      Built in-house.<br><span class="text-[#7dd3fc]">Since 2010.</span>
+    </h2>
+
+    <blockquote class="text-[#a8b3c1] text-xl md:text-2xl leading-relaxed font-jakarta italic max-w-3xl mx-auto mb-12 rev d2">
+      "When founding Fantail, my mission was to be the supplier of choice, the employer of choice, the solution of choice — and a company that supports the communities where we do business."
+    </blockquote>
+    <p class="mono text-[11px] uppercase tracking-[.25em] text-[#7b8794] mb-14 rev d3">— Chris Spayes, founder &amp; managing director</p>
+
+    <div class="flex flex-wrap justify-center gap-4 rev d4">
+      <a href="index.html#contact" class="inline-flex items-center gap-3 bg-[#EC263C] text-white px-8 py-4 mono uppercase tracking-[.18em] text-[12px] hover:bg-[#c01e31] transition-colors">Talk to the team <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+      <a href="commercial.html" class="inline-flex items-center gap-3 border border-[#7dd3fc]/30 hover:border-[#7dd3fc] text-white px-8 py-4 mono uppercase tracking-[.18em] text-[12px] transition-colors">See commercial</a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="border-t border-[#1a2230] py-10 px-6 lg:px-10">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 mono text-[10px] uppercase tracking-[.2em] text-[#4a5563]">
+    <span>© 2026 FANTAIL SERVICES LTD · WELLINGTON</span>
+    <div class="flex items-center gap-6">
+      <a href="tel:042124763" class="hover:text-[#7dd3fc] transition-colors">(04) 212 4763</a>
+      <a href="mailto:office@fantailservices.co.nz" class="hover:text-[#7dd3fc] transition-colors">office@fantailservices.co.nz</a>
+    </div>
+    <span>DRAWING FS-001 · REV.A</span>
+  </div>
+</footer>
+
+
+<script>
+(function(){
+  /* === Scroll progress bar === */
+  var prog=document.getElementById('prog');
+  function onScroll(){
+    var st=window.scrollY,doc=document.documentElement;
+    var max=doc.scrollHeight-doc.clientHeight;
+    prog.style.width=(st/max*100)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* === Generic reveal on visibility === */
+  var revObs=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target);}});
+  },{threshold:.1});
+  document.querySelectorAll('.rev').forEach(function(el){revObs.observe(el);});
+
+  /* === Counter animation (in hero) === */
+  var ctrObs=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting)return;
+      var el=e.target,t=parseInt(el.getAttribute('data-target')),s=performance.now(),d=1600;
+      (function tick(now){
+        var p=Math.min((now-s)/d,1),v=Math.floor(t*(1-Math.pow(1-p,3)));
+        el.textContent=v;
+        if(p<1)requestAnimationFrame(tick);else el.textContent=t;
+      })(s);
+      ctrObs.unobserve(el);
+    });
+  },{threshold:.5});
+  document.querySelectorAll('.ctr').forEach(function(c){ctrObs.observe(c);});
+
+  /* === STAGE 01: scroll-driven building schematic === */
+  var stage1=document.getElementById('stage-building');
+  var pctEl=document.getElementById('stage1-pct');
+  var nameEl=document.getElementById('stage1-name');
+  var infoEl=document.getElementById('stage1-info');
+
+  // Stage info per progress band
+  /* Stages reordered to a real Wellington commercial M&E install sequence:
+     Structure → Electrical → HVAC → VRF/HRV → Refrigeration → Server/UPS → Solar (last)
+     Every callout verified against fantailservices.co.nz capability list. */
+  var stages=[
+    {at:0.02, name:'01 / STRUCTURE',     badge:'// shell complete', title:'Start with the shell.', body:'Foundation, slab, walls, floors and roof — by the main contractor. Once weather-tight, the services trades arrive. Fantail leads the mechanical and electrical scope from here.'},
+    {at:0.17, name:'02 / ELECTRICAL',    badge:'// switchgear first', title:'Power before anything else.', body:'Switchgear in the basement, vertical risers up every floor. Every other system needs this in first. COC certified by our in-house electricians.'},
+    {at:0.32, name:'03 / HVAC OUTDOOR',  badge:'// rooftop plant', title:'A condensing unit on the roof.', body:'Daikin, Mitsubishi, Hitachi, Temperzone, Gree — sized to the building load, lifted, set and pipework run by our own mechanical crews.'},
+    {at:0.47, name:'04 / VRF + HRV',     badge:'// risers + cassettes', title:'Refrigerant runs through every floor.', body:'Variable Refrigerant Flow with heat recovery, ducted to cassettes on every level. Paired with Heat Recovery Ventilation. Pressure-tested in-house, no subbies.'},
+    {at:0.62, name:'05 / REFRIGERATION', badge:'// cool room', title:'Specialty refrigeration where it&apos;s needed.', body:'Walk-in cool rooms, freezers and refrigeration plant for supermarkets, breweries, produce stores and bio labs. Approved refrigerant handling.'},
+    {at:0.76, name:'06 / SERVER + UPS',  badge:'// crac', title:'Critical-care cooling for data.', body:'CRAC units for server rooms and UPS halls. When this fails, the business stops — so 24/7 emergency response is built into the contract.'},
+    {at:0.90, name:'07 / SOLAR PV',      badge:'// roof last', title:'Solar last — after the roof is sealed.', body:'Commercial PV arrays from 30 kW up, mounted once the roof membrane is tested. Sungrow or Fronius inverters, wired down to the basement switchgear.'},
+  ];
+
+  // Building element groups in reveal order
+  var elements=[
+    /* Structure (01) */
+    {sel:'#frame',         start:0.00, end:0.04, type:'draw'},
+    {sel:'#ground',        start:0.01, end:0.05, type:'draw'},
+    {sel:'#walls',         start:0.04, end:0.10, type:'draw'},
+    {sel:'#roof',          start:0.07, end:0.13, type:'draw'},
+    {sel:'#floor1',        start:0.08, end:0.12, type:'draw'},
+    {sel:'#floor2',        start:0.10, end:0.13, type:'draw'},
+    {sel:'#floor3',        start:0.11, end:0.14, type:'draw'},
+    {sel:'#foundation',    start:0.04, end:0.09, type:'fade'},
+    /* Electrical (02) — moved early */
+    {sel:'#el-elec',       start:0.18, end:0.28, type:'fade'},
+    {sel:'#anno-elec',     start:0.20, end:0.28, type:'fade'},
+    /* HVAC outdoor (03) */
+    {sel:'#el-hvac-od',    start:0.33, end:0.42, type:'fade'},
+    {sel:'#anno-hvac',     start:0.35, end:0.42, type:'fade'},
+    /* VRF + HRV (04) */
+    {sel:'#el-vrf',        start:0.48, end:0.58, type:'fade'},
+    {sel:'#anno-vrf',      start:0.50, end:0.58, type:'fade'},
+    /* Refrigeration (05) */
+    {sel:'#el-refrig',     start:0.62, end:0.72, type:'fade'},
+    {sel:'#anno-refrig',   start:0.64, end:0.72, type:'fade'},
+    /* Server + UPS (06) */
+    {sel:'#el-server',     start:0.76, end:0.85, type:'fade'},
+    {sel:'#anno-server',   start:0.78, end:0.85, type:'fade'},
+    /* Solar PV (07) — moved last */
+    {sel:'#el-solar',      start:0.90, end:1.00, type:'fade'},
+    {sel:'#anno-solar',    start:0.92, end:1.00, type:'fade'},
+  ];
+
+  function applyStage(progress){
+    pctEl.textContent=String(Math.floor(progress*100)).padStart(2,'0')+'%';
+
+    elements.forEach(function(e){
+      var el=document.querySelector(e.sel);
+      if(!el)return;
+      var local=Math.max(0,Math.min(1,(progress-e.start)/(e.end-e.start)));
+      if(e.type==='draw'){
+        if(local>0)el.classList.add('in');else el.classList.remove('in');
+      }else{
+        el.style.opacity=local;
+      }
+    });
+
+    // Update side info panel + step counter based on stage band
+    var currentIdx=0;
+    for(var i=0;i<stages.length;i++) if(progress>=stages[i].at) currentIdx=i;
+    var current=stages[currentIdx];
+    if(infoEl.dataset.last!==current.name){
+      infoEl.dataset.last=current.name;
+      nameEl.textContent=current.name;
+      infoEl.innerHTML='<p class="mono text-[10px] uppercase tracking-[.18em] text-[#EC263C] mb-3">'+current.badge+'</p>'
+        +'<h3 class="font-poppins text-2xl text-white mb-4 leading-tight">'+current.title+'</h3>'
+        +'<p class="text-[#7b8794] text-sm leading-relaxed font-jakarta">'+current.body+'</p>';
+    }
+    // Step nav state
+    csIdx=currentIdx;
+    var counterText=String(currentIdx+1).padStart(2,'0')+'/'+String(stages.length).padStart(2,'0');
+    var cc=document.getElementById('cs-counter'); if(cc) cc.textContent=counterText;
+    var ccm=document.getElementById('cs-counter-m'); if(ccm) ccm.textContent=counterText;
+    var prevBtn=document.getElementById('cs-prev'); if(prevBtn) prevBtn.disabled=currentIdx<=0;
+    var nextBtn=document.getElementById('cs-next'); if(nextBtn) nextBtn.disabled=currentIdx>=stages.length-1;
+    var prevBtnM=document.getElementById('cs-prev-m'); if(prevBtnM) prevBtnM.disabled=currentIdx<=0;
+    var nextBtnM=document.getElementById('cs-next-m'); if(nextBtnM) nextBtnM.disabled=currentIdx>=stages.length-1;
+    // Update dot active state
+    document.querySelectorAll('#cs-dots .cs-dot').forEach(function(d,i){
+      d.style.background = i===currentIdx ? '#7dd3fc' : '#243047';
+      d.style.transform = i===currentIdx ? 'scale(1.3)' : 'scale(1)';
+    });
+  }
+
+  function onStage1Scroll(){
+    var rect=stage1.getBoundingClientRect();
+    var total=stage1.offsetHeight-window.innerHeight;
+    var scrolled=-rect.top;
+    var p=Math.max(0,Math.min(1,scrolled/total));
+    applyStage(p);
+  }
+  window.addEventListener('scroll',onStage1Scroll,{passive:true});
+  onStage1Scroll();
+
+  /* === Step navigation (prev / next buttons) for commercial schematic === */
+  var csIdx=0;
+  function csJumpTo(idx){
+    idx=Math.max(0,Math.min(stages.length-1,idx));
+    var target=stages[idx].at;
+    var stageTop=stage1.offsetTop;
+    var range=stage1.offsetHeight-window.innerHeight;
+    // +6 ensures we cross the threshold for that stage cleanly
+    var scrollY=stageTop+(target*range)+6;
+    window.scrollTo({top:scrollY,behavior:'smooth'});
+  }
+  // Populate dot indicator
+  var csDots=document.getElementById('cs-dots');
+  if(csDots){
+    for(var d=0;d<stages.length;d++){
+      var dot=document.createElement('button');
+      dot.className='cs-dot w-1.5 h-1.5 rounded-full bg-[#243047] hover:bg-[#7dd3fc] transition-all cursor-pointer';
+      dot.setAttribute('data-i',d);
+      dot.title=stages[d].name;
+      dot.addEventListener('click',function(e){csJumpTo(parseInt(e.currentTarget.getAttribute('data-i'),10));});
+      csDots.appendChild(dot);
+    }
+  }
+  // Hook prev/next
+  ['cs-prev','cs-prev-m'].forEach(function(id){
+    var b=document.getElementById(id);
+    if(b)b.addEventListener('click',function(){csJumpTo(csIdx-1);});
+  });
+  ['cs-next','cs-next-m'].forEach(function(id){
+    var b=document.getElementById(id);
+    if(b)b.addEventListener('click',function(){csJumpTo(csIdx+1);});
+  });
+  // Keyboard nav (when stage is in view)
+  window.addEventListener('keydown',function(e){
+    if(e.key!=='ArrowDown'&&e.key!=='ArrowUp'&&e.key!=='PageDown'&&e.key!=='PageUp')return;
+    var rect=stage1.getBoundingClientRect();
+    if(rect.top>0||rect.bottom<window.innerHeight)return; // not in sticky view
+    e.preventDefault();
+    if(e.key==='ArrowDown'||e.key==='PageDown')csJumpTo(csIdx+1);
+    else csJumpTo(csIdx-1);
+  });
+
+  /* === STAGE 02 (NEW): residential home schematic scroll driver === */
+  var stageRes=document.getElementById('stage-res');
+  var resPctEl=document.getElementById('stage-res-pct');
+  var resNameEl=document.getElementById('stage-res-name');
+  var resInfoEl=document.getElementById('stage-res-info');
+
+  var resStages=[
+    {at:0.03, name:'01 / FRAME',     badge:'// foundation', title:'A house, drawn from the ground up.', body:'Foundation, walls, pitched roof, garage. The kind of Wellington home we work in every day. From here, every system has to fit the family inside.'},
+    {at:0.16, name:'02 / HEAT PUMP', badge:'// cold house?', title:'First: warm it up.', body:'Single-head heat pump for the lounge, plus an outdoor compressor on the side wall. Mitsubishi, Daikin or Panasonic. Installed in a day, often same week as quote.'},
+    {at:0.34, name:'03 / HRU VENT',  badge:'// damp + condensation', title:'Then: clear the moisture.', body:'Heat Recovery Ventilation pulls fresh air in and damp air out — no more streamed-up windows, no more mould around the frames. SmartVent or HRV.'},
+    {at:0.50, name:'04 / SOLAR PV',  badge:'// power bill', title:'Now: cut the bill.', body:'5–10 kW rooftop solar with a Sungrow or Fronius inverter. Battery-ready packages so you can add storage later. Most homes break even in 5–7 years.'},
+    {at:0.65, name:'05 / HOT WATER HP', badge:'// hot water cost', title:'Halve the biggest hidden cost.', body:'Hot water is typically 30% of a power bill. A hot-water heat pump (Reclaim, Apricus) cuts that ~70%. Fits in the laundry, runs on a fraction of the power.'},
+    {at:0.78, name:'06 / EV CHARGER',badge:'// new EV?', title:'Drive on your own sunshine.', body:'7 kW wall-mount on the garage. Tesla Wall Connector, EVNEX, Wallbox. Wired straight from your solar — charge for the cost of nothing.'},
+    {at:0.92, name:'07 / SMART PANEL', badge:'// manage it all', title:'And tie it all together.', body:'A smart electrical panel monitors every circuit, prioritises solar to the EV, and surfaces everything in one app. COC certified by our own electricians.'},
+  ];
+
+  var resElements=[
+    {sel:'#res-frame',         start:0.00, end:0.04, type:'draw'},
+    {sel:'#res-titleline',     start:0.01, end:0.04, type:'draw'},
+    {sel:'#res-ground',        start:0.02, end:0.06, type:'draw'},
+    {sel:'#res-walls',         start:0.05, end:0.10, type:'draw'},
+    {sel:'#res-roof',          start:0.07, end:0.12, type:'draw'},
+    {sel:'#res-garage',        start:0.10, end:0.13, type:'draw'},
+    {sel:'#res-garage-roof',   start:0.11, end:0.14, type:'draw'},
+    {sel:'#res-div1',          start:0.10, end:0.14, type:'draw'},
+    {sel:'#res-div2',          start:0.12, end:0.15, type:'draw'},
+    {sel:'#res-foundation',    start:0.05, end:0.10, type:'fade'},
+    {sel:'#res-hp',            start:0.18, end:0.28, type:'fade'},
+    {sel:'#res-anno-hp',       start:0.20, end:0.28, type:'fade'},
+    {sel:'#res-hrv',           start:0.36, end:0.46, type:'fade'},
+    {sel:'#res-anno-hrv',      start:0.38, end:0.46, type:'fade'},
+    {sel:'#res-solar',         start:0.52, end:0.62, type:'fade'},
+    {sel:'#res-anno-solar',    start:0.54, end:0.62, type:'fade'},
+    {sel:'#res-hwhp',          start:0.67, end:0.76, type:'fade'},
+    {sel:'#res-anno-hwhp',     start:0.69, end:0.76, type:'fade'},
+    {sel:'#res-ev',            start:0.80, end:0.88, type:'fade'},
+    {sel:'#res-anno-ev',       start:0.82, end:0.88, type:'fade'},
+    {sel:'#res-smart',         start:0.92, end:1.00, type:'fade'},
+    {sel:'#res-anno-smart',    start:0.94, end:1.00, type:'fade'},
+  ];
+
+  function applyRes(progress){
+    resPctEl.textContent=String(Math.floor(progress*100)).padStart(2,'0')+'%';
+    resElements.forEach(function(e){
+      var el=document.querySelector(e.sel);
+      if(!el)return;
+      var local=Math.max(0,Math.min(1,(progress-e.start)/(e.end-e.start)));
+      if(e.type==='draw'){
+        if(local>0)el.classList.add('in');else el.classList.remove('in');
+      }else{
+        el.style.opacity=local;
+      }
+    });
+    var current=resStages[0];
+    for(var i=0;i<resStages.length;i++) if(progress>=resStages[i].at) current=resStages[i];
+    if(resInfoEl.dataset.last!==current.name){
+      resInfoEl.dataset.last=current.name;
+      resNameEl.textContent=current.name;
+      resInfoEl.innerHTML='<p class="mono text-[10px] uppercase tracking-[.18em] text-[#EC263C] mb-3">'+current.badge+'</p>'
+        +'<h3 class="font-poppins text-2xl text-white mb-4 leading-tight">'+current.title+'</h3>'
+        +'<p class="text-[#7b8794] text-sm leading-relaxed font-jakarta">'+current.body+'</p>';
+    }
+  }
+
+  function onResScroll(){
+    var rect=stageRes.getBoundingClientRect();
+    var total=stageRes.offsetHeight-window.innerHeight;
+    var scrolled=-rect.top;
+    var p=Math.max(0,Math.min(1,scrolled/total));
+    applyRes(p);
+  }
+  if(stageRes){
+    window.addEventListener('scroll',onResScroll,{passive:true});
+    onResScroll();
+  }
+
+  /* === STAGE 02: 22-van fleet grid === */
+  var vansG=document.getElementById('vans');
+  if(vansG){
+    var perRow=6,vanW=70,vanH=42,gap=8;
+    for(var i=0;i<22;i++){
+      var row=Math.floor(i/perRow), col=i%perRow;
+      var x=col*(vanW+gap)+10, y=row*(vanH+gap)+20;
+      // Van shape: rectangle + small cabin
+      vansG.insertAdjacentHTML('beforeend',
+        '<g class="van" style="opacity:0;" data-i="'+i+'">'
+        +'<rect x="'+x+'" y="'+y+'" width="'+vanW+'" height="'+vanH+'" fill="none" stroke="#7dd3fc" stroke-width="1"/>'
+        +'<rect x="'+(x+vanW-22)+'" y="'+(y+6)+'" width="14" height="14" fill="none" stroke="#7dd3fc" stroke-width=".7"/>'
+        +'<circle cx="'+(x+14)+'" cy="'+(y+vanH)+'" r="3" fill="#0a0e14" stroke="#7dd3fc" stroke-width=".7"/>'
+        +'<circle cx="'+(x+vanW-14)+'" cy="'+(y+vanH)+'" r="3" fill="#0a0e14" stroke="#7dd3fc" stroke-width=".7"/>'
+        +'<text x="'+(x+8)+'" y="'+(y+vanH/2+4)+'" font-family="JetBrains Mono" fill="#EC263C" font-size="8">FS-'+String(i+1).padStart(2,'0')+'</text>'
+        +'</g>'
+      );
+    }
+    var fleetObs=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting)return;
+        var vans=document.querySelectorAll('.van');
+        vans.forEach(function(v,i){
+          setTimeout(function(){v.style.transition='opacity .4s ease';v.style.opacity='1';},i*60);
+        });
+        fleetObs.unobserve(e.target);
+      });
+    },{threshold:.3});
+    fleetObs.observe(document.getElementById('fleet-grid'));
+  }
+
+  /* === STAGE 05: project constellation — VERIFIED real Fantail projects, clustered by sector with ambient drift === */
+  /* 55 projects scraped from https://www.fantailservices.co.nz/commercial/our-projects/ */
+  var projects=[
+    /* COMMERCIAL CLUSTER (25) — Apartments + Commercial + Fit Out + Residential */
+    {n:'114 The Terrace',sec:'commercial'},
+    {n:'120 Victoria Street',sec:'commercial'},
+    {n:'Book House',sec:'commercial'},
+    {n:'Colombo Street',sec:'commercial'},
+    {n:'Frederick Street',sec:'commercial'},
+    {n:'Haining Street',sec:'commercial'},
+    {n:'Hyde Lane',sec:'commercial'},
+    {n:'Kotuku Apartments',sec:'commercial'},
+    {n:'134 Queens Drive',sec:'commercial'},
+    {n:'Bamford Warehouse',sec:'commercial'},
+    {n:'Capital City Ford & Mazda',sec:'commercial'},
+    {n:'Lane Street Studios',sec:'commercial'},
+    {n:'Placemakers',sec:'commercial'},
+    {n:'Plumbline Head Office',sec:'commercial'},
+    {n:'TerraCat',sec:'commercial'},
+    {n:'Tesla Centre',sec:'commercial'},
+    {n:'Maritime Tower',sec:'commercial'},
+    {n:'17 Ihakara Street',sec:'commercial'},
+    {n:'318 Lambton Quay',sec:'commercial'},
+    {n:'Home of Compassion',sec:'commercial'},
+    {n:'PSA House Roof',sec:'commercial'},
+    {n:'Skyline Medical Centre',sec:'commercial'},
+    {n:'Whenua Tapu Cemetery',sec:'commercial'},
+    {n:'28 Palliser Road',sec:'commercial'},
+    {n:'Wellington Mansion',sec:'commercial'},
+
+    /* EDUCATION (8) */
+    {n:'Brooklyn School',sec:'education'},
+    {n:'Kelburn School',sec:'education'},
+    {n:'Raphael House Rudolf Steiner',sec:'education'},
+    {n:'Te Wananga o Aotearoa',sec:'education'},
+    {n:'Tararua College',sec:'education'},
+    {n:'Te Kura Porirua',sec:'education'},
+    {n:'Thorndon School',sec:'education'},
+    {n:'Wellington East Girls College',sec:'education'},
+
+    /* HEALTHCARE (3) */
+    {n:'Mary Potter Hospice',sec:'healthcare'},
+    {n:'Onslow Medical Centre',sec:'healthcare'},
+    {n:'Ora Toa Pōneke Medical Centre',sec:'healthcare'},
+
+    /* GOVERNMENT & COMMUNITY (11) */
+    {n:'Callaghan Innovation',sec:'gov'},
+    {n:'CIT Campus',sec:'gov'},
+    {n:'MetService Kapiti',sec:'gov'},
+    {n:'Samoan High',sec:'gov'},
+    {n:'Trentham Camp',sec:'gov'},
+    {n:'Newtown Fire Station',sec:'gov'},
+    {n:'Upper Hutt Railway Station',sec:'gov'},
+    {n:'Alex Moore Park',sec:'gov'},
+    {n:'Maidstone',sec:'gov'},
+    {n:'Hutt Park Indoor Sports',sec:'gov'},
+    {n:'Regional Bowls Centre',sec:'gov'},
+
+    /* INDUSTRIAL / RETAIL / HERITAGE / SUBDIVISIONS (8) */
+    {n:"Farrah's Headquarters",sec:'industrial'},
+    {n:'Whitby New World',sec:'industrial'},
+    {n:'KFC Porirua',sec:'industrial'},
+    {n:'Macaulay Metals',sec:'industrial'},
+    {n:'MSD',sec:'industrial'},
+    {n:'135 Jackson',sec:'industrial'},
+    {n:'Ministry of Heritage & Culture Trust',sec:'industrial'},
+    {n:'Dwell Housing',sec:'industrial'},
+  ];
+  var sectorColors={commercial:'#EC263C',education:'#7dd3fc',healthcare:'#22c55e',gov:'#a78bfa',industrial:'#fbbf24'};
+  // Cluster centroids + radii inside the 1200x660 viewBox
+  // 2x3 grid layout — top: Commercial(large) + Education+Healthcare(stacked) | bottom: Gov & Industrial
+  var clusters={
+    commercial:{cx:380, cy:280, rx:300, ry:180, label:'Commercial & Apartments'},
+    education: {cx:1050,cy:200, rx:240, ry:130, label:'Education'},
+    healthcare:{cx:1050,cy:470, rx:200, ry:110, label:'Healthcare'},
+    gov:       {cx:380, cy:710, rx:300, ry:150, label:'Government & Community'},
+    industrial:{cx:1050,cy:720, rx:280, ry:140, label:'Industrial · Retail · Heritage'},
+  };
+
+  // Position projects in their cluster — deterministic pseudo-random spread
+  function rng(seed){return function(){seed=(seed*9301+49297)%233280;return seed/233280;};}
+  var sectorIdx={};
+  projects.forEach(function(p){
+    sectorIdx[p.sec]=(sectorIdx[p.sec]||0)+1;
+    var i=sectorIdx[p.sec]-1;
+    var total=projects.filter(function(q){return q.sec===p.sec;}).length;
+    var c=clusters[p.sec];
+    var r=rng(i*73+p.sec.charCodeAt(0)*17);
+    // Spiral layout — each project a step along a spiral inside the cluster ellipse
+    // Gives even visual density and no clumping
+    var t=i/Math.max(total-1,1);
+    var angle=(t*Math.PI*2.4)+r()*0.4;  // ~1.2 revolutions across the cluster
+    var dist=0.25+t*0.65+r()*0.08;       // outward spiral
+    p.x=c.cx+Math.cos(angle)*c.rx*dist;
+    p.y=c.cy+Math.sin(angle)*c.ry*dist;
+    p.dur=(5+r()*4).toFixed(2);          // 5-9s breathe
+    p.del=(r()*5).toFixed(2);            // 0-5s phase offset
+  });
+
+  /* Sector card renderer — replaces constellation. Reads same projects[] array + clusters{} for labels/colors. */
+  var sectorGrid = document.getElementById('sector-grid');
+  if(sectorGrid){
+    // Order: Commercial (biggest, full width) → Education, Healthcare → Gov & Community, Industrial
+    var sectorOrder = ['commercial','education','healthcare','gov','industrial'];
+    var spans = {commercial:'lg:col-span-2',education:'',healthcare:'',gov:'',industrial:''};
+    sectorOrder.forEach(function(key,sIdx){
+      var c = clusters[key];
+      var color = sectorColors[key];
+      var items = projects.filter(function(p){return p.sec===key;});
+      var chips = items.map(function(p,i){
+        return '<span class="proj-chip inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-[#1a2230] hover:border-[var(--c)] bg-[#0a0e14] rounded text-[#a8b3c1] hover:text-white text-xs font-jakarta transition-all duration-200 cursor-default" style="--c:'+color+';opacity:0;transform:translateY(6px);transition:opacity .35s ease '+(i*30)+'ms,transform .35s ease '+(i*30)+'ms,border-color .2s,color .2s" data-chip="1">'
+          + '<span class="w-1 h-1 rounded-full" style="background:'+color+';"></span>'
+          + p.n
+          + '</span>';
+      }).join('');
+      sectorGrid.insertAdjacentHTML('beforeend',
+        '<div class="sector-card '+spans[key]+' border border-[#1a2230] bg-[#0a0e14]/40 p-7 hover:border-[var(--c)]/50 transition-colors rev d'+Math.min(sIdx+1,5)+'" style="--c:'+color+';">'
+        +  '<div class="flex items-center justify-between mb-6 pb-4 border-b border-[#1a2230]">'
+        +    '<div class="flex items-center gap-3">'
+        +      '<span class="w-2.5 h-2.5 rounded-full" style="background:'+color+';box-shadow:0 0 10px '+color+'66;"></span>'
+        +      '<h3 class="font-poppins font-bold text-white text-xl">'+c.label+'</h3>'
+        +    '</div>'
+        +    '<div class="mono text-[10px] uppercase tracking-[.2em] text-[#7b8794]">[<span style="color:'+color+';font-weight:700;">'+items.length+'</span> projects]</div>'
+        +  '</div>'
+        +  '<div class="flex flex-wrap gap-2">'+chips+'</div>'
+        +'</div>'
+      );
+    });
+    // Reveal chips on scroll into view
+    var sObs = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting)return;
+        e.target.querySelectorAll('[data-chip]').forEach(function(c){
+          c.style.opacity='1';
+          c.style.transform='translateY(0)';
+        });
+        sObs.unobserve(e.target);
+      });
+    },{threshold:.1});
+    document.querySelectorAll('.sector-card').forEach(function(card){sObs.observe(card);});
+  }
+
+  /* === STAGE 04: process flowchart drawing === */
+  var flowSvg=document.getElementById('flow-svg');
+  if(flowSvg){
+    var fObs=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting)return;
+        flowSvg.querySelectorAll('.draw').forEach(function(el,i){
+          setTimeout(function(){el.classList.add('in');},i*120);
+        });
+        fObs.unobserve(e.target);
+      });
+    },{threshold:.3});
+    fObs.observe(flowSvg);
+  }
+})();
+</script>
+
+</body>
+</html>
