@@ -265,23 +265,105 @@
         </a>
       </div>
 
-      <div class="hidden lg:flex justify-center">
-        <div class="grid grid-cols-3 gap-px bg-[#1a2230] p-px max-w-md w-full">
-          <div class="bg-[#06090d] p-6 text-center">
-            <div class="text-white font-archivo text-4xl mb-1">42</div>
-            <div class="text-[#7b8794] text-[10px] uppercase tracking-[.2em] font-archivo">People</div>
+      <!-- Animated blueprint schematic (mirrors the showcase.html hero feel) -->
+      <div class="hidden lg:block relative">
+        <style>
+          @keyframes if-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+          @keyframes if-spinR{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+          @keyframes if-draw{from{stroke-dashoffset:var(--len,200)}to{stroke-dashoffset:0}}
+          @keyframes if-pulse{0%,100%{opacity:.4;r:6}50%{opacity:0;r:12}}
+          .if-draw{stroke-dasharray:var(--len,200);stroke-dashoffset:var(--len,200);animation:if-draw 1.4s cubic-bezier(.16,1,.3,1) forwards}
+          .if-pulse{animation:if-pulse 2.4s ease-out infinite;transform-origin:center}
+          .if-corner{position:absolute;width:18px;height:18px}
+          .if-corner::before,.if-corner::after{content:'';position:absolute;background:#7dd3fc;opacity:.4}
+          .if-corner::before{width:18px;height:1px}
+          .if-corner::after{width:1px;height:18px}
+          .if-c-tl{top:0;left:0}
+          .if-c-tr{top:0;right:0}.if-c-tr::before{right:0}.if-c-tr::after{right:0}
+          .if-c-bl{bottom:0;left:0}.if-c-bl::before{bottom:0}.if-c-bl::after{bottom:0}
+          .if-c-br{bottom:0;right:0}.if-c-br::before{bottom:0;right:0}.if-c-br::after{bottom:0;right:0}
+          @media (prefers-reduced-motion:reduce){.if-draw{stroke-dashoffset:0!important}.if-pulse{animation:none!important}}
+        </style>
+
+        <div class="relative aspect-square max-w-[460px] mx-auto">
+          <span class="if-corner if-c-tl"></span><span class="if-corner if-c-tr"></span><span class="if-corner if-c-bl"></span><span class="if-corner if-c-br"></span>
+
+          <!-- Floating status badges -->
+          <div class="absolute top-4 left-4 z-10 bg-[#06090d] border border-[#1a2230] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[.15em]" style="font-family:'JetBrains Mono',ui-monospace,monospace;">
+            <span class="text-[#EC263C]">●</span> <span class="text-[#7b8794]">LIVE</span> &nbsp;<span class="text-[#7dd3fc]">22 vans deployed</span>
           </div>
-          <div class="bg-[#06090d] p-6 text-center">
-            <div class="text-white font-archivo text-4xl mb-1">22</div>
-            <div class="text-[#7b8794] text-[10px] uppercase tracking-[.2em] font-archivo">Vehicles</div>
+          <div class="absolute bottom-4 right-4 z-10 bg-[#06090d] border border-[#1a2230] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[.15em]" style="font-family:'JetBrains Mono',ui-monospace,monospace;">
+            <span class="text-[#22c55e]">●</span> <span class="text-[#7b8794]">UP</span> &nbsp;<span class="text-[#7dd3fc]">all systems</span>
           </div>
-          <div class="bg-[#06090d] p-6 text-center">
-            <div class="text-white font-archivo text-4xl mb-1">55</div>
-            <div class="text-[#7b8794] text-[10px] uppercase tracking-[.2em] font-archivo">Projects</div>
-          </div>
-          <div class="bg-[#06090d] p-6 text-center col-span-3 border-t border-[#1a2230]">
-            <p class="text-[#7dd3fc] text-[10px] uppercase tracking-[.3em] font-archivo">Drawing FS-001 · Rev.A · 2026</p>
-          </div>
+
+          <svg viewBox="0 0 400 400" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="ifGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1a2230" stroke-width=".5"/>
+              </pattern>
+            </defs>
+            <rect x="20" y="20" width="360" height="360" fill="url(#ifGrid)" stroke="#1a2230" stroke-width=".8"/>
+
+            <!-- Rotating compass ring -->
+            <g transform="translate(200,200)" style="animation:if-spin 30s linear infinite;transform-origin:center;transform-box:fill-box;">
+              <circle r="140" fill="none" stroke="#1a2230" stroke-width="1"/>
+              <circle r="100" fill="none" stroke="#243047" stroke-width=".7" stroke-dasharray="2 4"/>
+              <circle r="60" fill="none" stroke="#243047" stroke-width=".5"/>
+              <g>
+                <line x1="0" y1="-140" x2="0" y2="-130" stroke="#7dd3fc" stroke-width="1.2"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(30)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(60)"/>
+                <line x1="0" y1="-140" x2="0" y2="-130" stroke="#7dd3fc" stroke-width="1.2" transform="rotate(90)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(120)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(150)"/>
+                <line x1="0" y1="-140" x2="0" y2="-130" stroke="#7dd3fc" stroke-width="1.2" transform="rotate(180)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(210)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(240)"/>
+                <line x1="0" y1="-140" x2="0" y2="-130" stroke="#7dd3fc" stroke-width="1.2" transform="rotate(270)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(300)"/>
+                <line x1="0" y1="-140" x2="0" y2="-135" stroke="#7dd3fc" stroke-width="1" transform="rotate(330)"/>
+              </g>
+              <text y="-148" fill="#EC263C" font-size="11" text-anchor="middle" font-weight="700" font-family="JetBrains Mono, monospace">N</text>
+              <text x="148" y="4" fill="#4a5563" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">E</text>
+              <text y="156" fill="#4a5563" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">S</text>
+              <text x="-148" y="4" fill="#4a5563" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">W</text>
+            </g>
+
+            <!-- Counter-rotating inner crosshair -->
+            <g transform="translate(200,200)" style="animation:if-spinR 22s linear infinite;transform-origin:center;transform-box:fill-box;">
+              <circle r="80" fill="none" stroke="#7dd3fc" stroke-width=".6" stroke-dasharray="3 3" opacity=".5"/>
+              <line x1="-80" y1="0" x2="80" y2="0" stroke="#7dd3fc" stroke-width=".5" opacity=".4"/>
+              <line x1="0" y1="-80" x2="0" y2="80" stroke="#7dd3fc" stroke-width=".5" opacity=".4"/>
+            </g>
+
+            <!-- Building schematic — draws once on load -->
+            <g transform="translate(200,200)">
+              <rect x="-40" y="-50" width="80" height="100" fill="#06090d" stroke="#7dd3fc" stroke-width="1.2" class="if-draw" style="--len:360"/>
+              <path d="M -50 -50 L 0 -85 L 50 -50" fill="none" stroke="#7dd3fc" stroke-width="1.2" class="if-draw" style="--len:140;animation-delay:.4s"/>
+              <line x1="-40" y1="-15" x2="40" y2="-15" stroke="#243047" stroke-width=".7" class="if-draw" style="--len:80;animation-delay:.7s"/>
+              <line x1="-40" y1="20" x2="40" y2="20" stroke="#243047" stroke-width=".7" class="if-draw" style="--len:80;animation-delay:.9s"/>
+              <!-- HVAC unit on roof -->
+              <rect x="22" y="-65" width="14" height="8" fill="#06090d" stroke="#EC263C" stroke-width=".8" class="if-draw" style="--len:44;animation-delay:1.2s"/>
+              <!-- Solar panel on left pitch -->
+              <line x1="-44" y1="-54" x2="-12" y2="-72" stroke="#EC263C" stroke-width="1.5" class="if-draw" style="--len:40;animation-delay:1.5s"/>
+              <line x1="-40" y1="-50" x2="-8" y2="-68" stroke="#EC263C" stroke-width="1.5" class="if-draw" style="--len:40;animation-delay:1.7s"/>
+              <!-- Pulse markers (HVAC + solar) -->
+              <circle cx="29" cy="-61" r="2.5" fill="#EC263C"/>
+              <circle cx="29" cy="-61" r="6" fill="#EC263C" opacity=".35" class="if-pulse"/>
+              <circle cx="-26" cy="-63" r="2" fill="#EC263C"/>
+              <!-- Ground line -->
+              <line x1="-90" y1="50" x2="90" y2="50" stroke="#7dd3fc" stroke-width="1" class="if-draw" style="--len:180;animation-delay:.2s"/>
+              <text y="68" fill="#4a5563" font-size="9" text-anchor="middle" letter-spacing="1.5" font-family="JetBrains Mono, monospace">FANTAIL · TYPICAL JOB</text>
+            </g>
+
+            <!-- Footer ticker text -->
+            <g transform="translate(200, 362)">
+              <text fill="#4a5563" font-size="9" text-anchor="middle" letter-spacing="2" font-family="JetBrains Mono, monospace">
+                <tspan>SECTOR · COMMERCIAL · INDUSTRIAL · RESIDENTIAL</tspan>
+                <animate attributeName="opacity" values=".55;1;.55" dur="3.5s" repeatCount="indefinite"/>
+              </text>
+            </g>
+          </svg>
         </div>
       </div>
 
