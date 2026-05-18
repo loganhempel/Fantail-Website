@@ -347,22 +347,24 @@
 <div class="div-grad"></div>
 <section id="about" class="bg-[#141414] py-28">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
-    <div class="grid lg:grid-cols-2 gap-16 items-center">
+    <div class="grid lg:grid-cols-2 gap-16 lg:items-stretch">
 
-      <!-- Left: scope-aware image with caption + stat card -->
+      <!-- Left: scope-aware visual block (no stock photos — branded blueprint card) -->
       <div class="r relative">
-        <div class="relative h-[500px] w-full rounded-lg overflow-hidden border border-[#1E1E1E]">
-          <img id="scope-img" src="https://images.unsplash.com/photo-1716643863806-989dd76ae093?w=1100&q=80&auto=format&fit=crop" alt="" class="absolute inset-0 w-full h-full object-cover transition-all duration-500" style="opacity:1;transform:scale(1);">
-          <div class="absolute inset-0 rounded-lg" style="background:linear-gradient(180deg,rgba(10,10,10,.1) 0%,rgba(10,10,10,.0) 30%,rgba(10,10,10,.85) 100%);"></div>
-          <!-- Scope label badge (top-left) -->
-          <div class="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-[#0a0a0a]/80 backdrop-blur border border-[#2a2a2a] rounded-full">
+        <div class="relative w-full lg:h-full min-h-[480px] rounded-lg overflow-hidden border border-[#1E1E1E] bg-gradient-to-br from-[#0d0d0d] to-[#070707]">
+          <div id="scope-visual-glow" class="absolute inset-0 transition-all duration-500" style="background:radial-gradient(circle at 50% 45%, rgba(236,38,60,.14) 0%, transparent 60%);"></div>
+          <div class="absolute inset-0 pointer-events-none" style="background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:40px 40px;"></div>
+          <div class="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-[#0a0a0a]/85 backdrop-blur border border-[#2a2a2a] rounded-full z-10">
             <span class="w-1.5 h-1.5 rounded-full bg-[#EC263C]" style="animation:pdot 2s ease-in-out infinite;"></span>
             <span id="scope-img-label" class="text-[#EC263C] text-[10px] font-montserrat font-bold uppercase tracking-widest">01 / GREENFIELD BUILD</span>
           </div>
-          <!-- Caption overlay -->
-          <div class="absolute bottom-0 inset-x-0 p-7">
+          <div class="absolute top-4 right-4 text-[#444] text-[9px] font-montserrat font-semibold uppercase tracking-[.2em] z-10">FS · PLANT · REV.A</div>
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <i id="scope-icon" class="fa-solid fa-industry text-[#EC263C]/40 transition-all duration-500" style="font-size:180px;"></i>
+          </div>
+          <div class="absolute bottom-0 inset-x-0 p-7" style="background:linear-gradient(0deg,rgba(0,0,0,.85) 0%,transparent 100%);">
             <p class="text-[#888] text-[10px] font-montserrat font-bold uppercase tracking-[.18em] mb-2">Working with</p>
-            <h3 id="scope-img-caption" class="font-montserrat font-black text-white text-2xl leading-tight">In-house Fantail design team</h3>
+            <h3 id="scope-img-caption" class="font-montserrat font-black text-white text-2xl leading-tight">New industrial plant install</h3>
           </div>
         </div>
         <div class="absolute -bottom-5 -right-4 lg:-right-8 bg-[#0A0A0A] border border-[#2A2A2A] px-5 py-4 rounded-lg hidden md:flex gap-5 divide-x divide-[#1E1E1E] shadow-2xl">
@@ -836,20 +838,18 @@
   var bo=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');bo.unobserve(x.target);}});},{threshold:.4});
   document.querySelectorAll('.proj-bar').forEach(function(b){bo.observe(b);});
 
-  /* Scope selector — with per-scope image swap, fade animation, panel cross-fade */
-  var scopeImages = {"design":"https://images.unsplash.com/photo-1716643863806-989dd76ae093?w=1100&q=80&auto=format&fit=crop","consultant":"https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1100&q=80&auto=format&fit=crop","tender":"https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1100&q=80&auto=format&fit=crop","maintain":"https://images.unsplash.com/photo-1564998115952-368e7d4969ea?w=1100&q=80&auto=format&fit=crop"};
+  /* Scope selector — icon swap (no stock photos), label + caption update, panel cross-fade */
+  var scopeIcons = {"design":"fa-industry","consultant":"fa-handshake-angle","tender":"fa-arrows-rotate","maintain":"fa-gauge-high"};
   var scopeCaptions = {"design":{"label":"01 / GREENFIELD BUILD","caption":"New industrial plant install"},"consultant":{"label":"02 / CONSULTANT-LED","caption":"Delivering to your spec"},"tender":{"label":"03 / CAPEX UPGRADE","caption":"Plant retrofits + relocations"},"maintain":{"label":"04 / ASSET MGMT","caption":"24/7 critical-asset response"}};
-  var scopeImgEl = document.getElementById('scope-img');
+  var scopeIconEl = document.getElementById('scope-icon');
   var scopeImgLabel = document.getElementById('scope-img-label');
   var scopeImgCaption = document.getElementById('scope-img-caption');
 
   document.querySelectorAll('.scope-btn').forEach(function(btn){
     btn.addEventListener('click',function(){
       var scope = btn.getAttribute('data-scope');
-      // Update buttons
       document.querySelectorAll('.scope-btn').forEach(function(b){b.classList.remove('active');});
       btn.classList.add('active');
-      // Cross-fade panels
       document.querySelectorAll('.scope-panel').forEach(function(p){
         if(!p.classList.contains('active'))return;
         p.style.opacity='0';
@@ -858,7 +858,6 @@
           var newPanel = document.getElementById('scope-'+scope);
           if(newPanel){
             newPanel.classList.add('active');
-            // force reflow then fade in
             requestAnimationFrame(function(){
               newPanel.style.opacity='0';
               requestAnimationFrame(function(){
@@ -869,15 +868,14 @@
           }
         },180);
       });
-      // Swap image with fade + slight scale animation
-      if(scopeImgEl && scopeImages[scope]){
-        scopeImgEl.style.opacity='0';
-        scopeImgEl.style.transform='scale(1.05)';
+      if(scopeIconEl && scopeIcons[scope]){
+        scopeIconEl.style.opacity='0';
+        scopeIconEl.style.transform='scale(.9)';
         setTimeout(function(){
-          scopeImgEl.src = scopeImages[scope];
-          scopeImgEl.style.transform='scale(1)';
-          scopeImgEl.style.opacity='1';
-        }, 350);
+          scopeIconEl.className = scopeIconEl.className.replace(/fa-(?!solid)[\w-]+/g,'').trim() + ' ' + scopeIcons[scope];
+          scopeIconEl.style.transform='scale(1)';
+          scopeIconEl.style.opacity='1';
+        }, 250);
       }
       if(scopeImgLabel && scopeCaptions[scope]){
         scopeImgLabel.textContent = scopeCaptions[scope].label;

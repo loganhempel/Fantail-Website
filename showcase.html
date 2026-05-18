@@ -800,7 +800,14 @@
       <p class="text-[#a8b3c1] leading-relaxed font-jakarta text-lg rev d1">Every project below is real — pulled from fantailservices.co.nz. Apartments to abattoirs, schools to supermarkets. Browse by sector.</p>
     </div>
 
-    <!-- SECTOR CARDS GRID — clean, readable, no overlaps -->
+    <!-- CONSTELLATION — network of projects clustered by sector, no overlap -->
+    <div class="relative border border-[#1a2230] bg-[#06090d]/60 rounded mb-10 overflow-hidden">
+      <div class="absolute top-3 left-3 mono text-[9px] uppercase tracking-[.2em] text-[#4a5563] z-10">NET-01 · PROJECTS BY SECTOR</div>
+      <div class="absolute top-3 right-3 mono text-[9px] uppercase tracking-[.2em] text-[#4a5563] z-10">55 NODES · 5 CLUSTERS</div>
+      <svg id="constellation" viewBox="0 0 1200 880" class="w-full h-auto block" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+
+    <!-- SECTOR CARDS GRID — readable listing, complements the constellation above -->
     <div id="sector-grid" class="grid lg:grid-cols-2 gap-5"></div>
 
     <p class="mt-8 mono text-[10px] uppercase tracking-[.2em] text-[#4a5563] text-center">// every project verified against fantailservices.co.nz/commercial/our-projects/</p>
@@ -1504,10 +1511,12 @@
         +'</div>'
       );
     });
-    // Reveal chips on scroll into view
+    // Reveal cards + chips on scroll into view (the cards are .rev but were
+    // inserted after the global revObs ran, so observe them here)
     var sObs = new IntersectionObserver(function(es){
       es.forEach(function(e){
         if(!e.isIntersecting)return;
+        e.target.classList.add('in');
         e.target.querySelectorAll('[data-chip]').forEach(function(c){
           c.style.opacity='1';
           c.style.transform='translateY(0)';
@@ -1516,6 +1525,105 @@
       });
     },{threshold:.1});
     document.querySelectorAll('.sector-card').forEach(function(card){sObs.observe(card);});
+  }
+
+  /* === CONSTELLATION SVG — network of all 55 projects, no overlap, sector-clustered === */
+  var conSvg = document.getElementById('constellation');
+  if(conSvg){
+    // Cluster regions inside the 1200x880 viewBox — bounds are non-overlapping
+    var conClusters = {
+      commercial:{label:'Commercial & Apartments', x:40,  y:40,  w:720, h:340, color:'#EC263C', cols:5},
+      education: {label:'Education',                x:790, y:40,  w:370, h:340, color:'#7dd3fc', cols:2},
+      government:{label:'Government & Community',   x:40,  y:420, w:540, h:420, color:'#a78bfa', cols:3},
+      healthcare:{label:'Healthcare',               x:610, y:420, w:240, h:200, color:'#22c55e', cols:1},
+      industrial:{label:'Industrial · Retail · Heritage', x:880, y:420, w:280, h:420, color:'#fbbf24', cols:2}
+    };
+    // Sector key mapping from the existing projects[] array
+    var conSectorKey = {commercial:'commercial', education:'education', gov:'government', healthcare:'healthcare', industrial:'industrial'};
+
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var hqX = 600, hqY = 400;
+
+    // Background dot grid (faint)
+    var bgGrid = '';
+    for(var gx=20; gx<1200; gx+=40){ bgGrid += '<line x1="'+gx+'" y1="0" x2="'+gx+'" y2="880" stroke="#1a2230" stroke-width=".4" opacity=".25"/>'; }
+    for(var gy=20; gy<880; gy+=40){ bgGrid += '<line x1="0" y1="'+gy+'" x2="1200" y2="'+gy+'" stroke="#1a2230" stroke-width=".4" opacity=".25"/>'; }
+    conSvg.insertAdjacentHTML('beforeend', bgGrid);
+
+    // Connection lines from HQ → each cluster center (rendered FIRST so dots sit on top)
+    var conKeys = Object.keys(conClusters);
+    conKeys.forEach(function(k){
+      var c = conClusters[k];
+      var cx = c.x + c.w/2, cy = c.y + c.h/2;
+      conSvg.insertAdjacentHTML('beforeend',
+        '<line x1="'+hqX+'" y1="'+hqY+'" x2="'+cx+'" y2="'+cy+'" stroke="'+c.color+'" stroke-width=".8" opacity=".22" stroke-dasharray="3 4"/>'
+      );
+    });
+
+    // Cluster boundary boxes + headers
+    conKeys.forEach(function(k){
+      var c = conClusters[k];
+      var count = projects.filter(function(p){return conSectorKey[p.sec]===k;}).length;
+      conSvg.insertAdjacentHTML('beforeend',
+        '<g>'
+        + '<rect x="'+c.x+'" y="'+c.y+'" width="'+c.w+'" height="'+c.h+'" fill="none" stroke="'+c.color+'" stroke-width=".7" opacity=".35" rx="4"/>'
+        + '<rect x="'+c.x+'" y="'+c.y+'" width="'+c.w+'" height="32" fill="'+c.color+'" opacity=".08"/>'
+        + '<text x="'+(c.x+14)+'" y="'+(c.y+21)+'" fill="'+c.color+'" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" letter-spacing="2">'+c.label.toUpperCase()+'</text>'
+        + '<text x="'+(c.x+c.w-14)+'" y="'+(c.y+21)+'" fill="'+c.color+'" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" text-anchor="end">['+count+']</text>'
+        + '</g>'
+      );
+    });
+
+    // Project dots — laid out in a grid inside each cluster
+    conKeys.forEach(function(k){
+      var c = conClusters[k];
+      var items = projects.filter(function(p){return conSectorKey[p.sec]===k;});
+      var cols = c.cols;
+      var rows = Math.ceil(items.length/cols);
+      var padTop = 50, padBottom = 18, padX = 18;
+      var cellW = (c.w - padX*2) / cols;
+      var cellH = (c.h - padTop - padBottom) / rows;
+      items.forEach(function(p, i){
+        var col = i % cols, row = Math.floor(i/cols);
+        var dx = c.x + padX + cellW*col + 8;       // dot at left of cell
+        var dy = c.y + padTop + cellH*row + cellH/2;
+        var tx = dx + 12;                           // text after dot
+        // Truncate long names (max ~22 chars to keep tidy)
+        var name = p.n.length > 26 ? p.n.slice(0,24)+'…' : p.n;
+        conSvg.insertAdjacentHTML('beforeend',
+          '<g class="con-node" style="opacity:0;transition:opacity .5s ease '+(i*15+50)+'ms,transform .5s ease '+(i*15+50)+'ms;transform:translateY(4px);">'
+          + '<circle cx="'+dx+'" cy="'+dy+'" r="3" fill="'+c.color+'"/>'
+          + '<circle cx="'+dx+'" cy="'+dy+'" r="8" fill="'+c.color+'" opacity=".18"/>'
+          + '<text x="'+tx+'" y="'+(dy+3.5)+'" fill="#a8b3c1" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5">'+name+'</text>'
+          + '</g>'
+        );
+      });
+    });
+
+    // Central HQ node
+    conSvg.insertAdjacentHTML('beforeend',
+      '<g>'
+      + '<circle cx="'+hqX+'" cy="'+hqY+'" r="26" fill="#06090d" stroke="#7dd3fc" stroke-width="1.2"/>'
+      + '<circle cx="'+hqX+'" cy="'+hqY+'" r="44" fill="none" stroke="#7dd3fc" stroke-width=".6" opacity=".35" stroke-dasharray="2 4"/>'
+      + '<circle cx="'+hqX+'" cy="'+hqY+'" r="6" fill="#EC263C"/>'
+      + '<circle cx="'+hqX+'" cy="'+hqY+'" r="14" fill="#EC263C" opacity=".18" class="pulse"/>'
+      + '<text x="'+hqX+'" y="'+(hqY+50)+'" fill="#7dd3fc" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="2">FANTAIL HQ</text>'
+      + '<text x="'+hqX+'" y="'+(hqY+66)+'" fill="#7b8794" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">LOWER HUTT</text>'
+      + '</g>'
+    );
+
+    // Reveal nodes on scroll
+    var conObs = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting)return;
+        e.target.querySelectorAll('.con-node').forEach(function(n){
+          n.style.opacity = '1';
+          n.style.transform = 'translateY(0)';
+        });
+        conObs.unobserve(e.target);
+      });
+    },{threshold:.15});
+    conObs.observe(conSvg);
   }
 
   /* === STAGE 04: process flowchart drawing === */
